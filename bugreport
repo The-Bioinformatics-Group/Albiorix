@@ -1,0 +1,86 @@
+#!/bin/sh
+
+my_RANDOM=$RANDOM
+OUTFILE=`whoami`.`date +%C%y-%m-%d`.$my_RANDOM.txt
+OUTDIR=/usr/local/bugreports
+#OUTDIR="."
+USER=`whoami`
+MAIL=mats@topel.se
+touch $OUTDIR/$OUTFILE
+
+#if [ "$#" === "0" ]; then
+#echo "#########################################################"
+#echo "Run command you whant to file a bugreport for:"
+#	read INPUT
+##	echo $INPUT | awk '{print $1;}' 
+#	COMMAND=$($INPUT | awk '{print $1;}')
+#	echo "$COMMAND"
+##	echo $COMMAND
+##	echo $COMMAND[0]
+##	$*=$COMMAND
+##	echo $*
+#	continue
+#else
+#	
+#	continue
+#
+#fi
+
+#################################
+## Print stuff to output file ###
+#################################
+
+printf "### Bug report generated `date` ###\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### User ###\n" >> $OUTDIR/$OUTFILE
+printf $USER"\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### UID ###\n" >> $OUTDIR/$OUTFILE
+printf `id -u $USER`"\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### Hostname ###\n" >> $OUTDIR/$OUTFILE
+printf `hostname`"\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### PWD ###\n" >> $OUTDIR/$OUTFILE
+printf `pwd`"\n\n">> $OUTDIR/$OUTFILE
+
+printf "### Command ###\n" >> $OUTDIR/$OUTFILE
+STARTTIME=`date +'%x %H:%M:%S'`
+printf "$*\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### Promt ###\n" >> $OUTDIR/$OUTFILE
+echo "[${USER}"@"${HOSTNAME%%.*}" "${PWD/#$HOME/~}]$" $* >> $OUTDIR/$OUTFILE
+echo "" >> $OUTDIR/$OUTFILE
+
+printf "### Which $1 ###\n" >> $OUTDIR/$OUTFILE
+printf `which $1` >> $OUTDIR/$OUTFILE 
+printf "\n\n" >> $OUTDIR/$OUTFILE
+
+printf "### $STARTTIME ###\n" >> $OUTDIR/$OUTFILE
+printf "### qstat ###\n" >> $OUTDIR/$OUTFILE
+/opt/gridengine/bin/linux-x64/qstat -f -u "*" -q node0@compute-0-0.local sandbox@compute-0-1.local sandbox@compute-0-2.local sandbox@compute-0-3.local sandbox@compute-0-4.local sandbox@compute-0-5.local sandbox@compute-0-6.local >> $OUTDIR/$OUTFILE
+printf "\n" >> $OUTDIR/$OUTFILE
+
+printf "### STDOUT & STDERR ###\n" >> $OUTDIR/$OUTFILE
+$* 2>&1 | tee -a $OUTDIR/$OUTFILE
+printf "\n" >> $OUTDIR/$OUTFILE
+wait
+
+printf "### ENV localhost ###\n" >> $OUTDIR/$OUTFILE
+/bin/env >> $OUTDIR/$OUTFILE
+printf "\n" >> $OUTDIR/$OUTFILE
+
+printf "### Node env ###\n" >> $OUTDIR/$OUTFILE
+rocks run host "echo; echo '#################'; hostname; echo '#################'; env; echo '########'; cat /proc/meminfo" >> $OUTDIR/$OUTFILE
+
+printf "\n### Node ps axjf ###\n" >> $OUTDIR/$OUTFILE
+rocks run host "echo; echo '#################'; hostname; echo '#################'; ps axjf" >> $OUTDIR/$OUTFILE
+
+###########################################
+### Finish ###
+
+printf "\n\n	### A bug report has been filed ###\n\n"
+printf "	Please send and email to your system administrator ("$MAIL") including:\n"
+printf "	1). A description of the bug\n"
+printf "	2). Expected output from the program\n"
+printf "	3). The bug report number: $my_RANDOM\n\n"
