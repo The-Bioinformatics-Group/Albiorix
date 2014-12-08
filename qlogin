@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo -n "Requested time [in hours]: "
+read req_time
+
+qlogin -l h_rt=$req_time:0:0 $*
