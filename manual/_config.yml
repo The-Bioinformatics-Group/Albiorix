@@ -1,0 +1,25 @@
+###########
+# site.url, site.title
+
+url:   'http://planetjekyll.github.io/jekyll-bootstrap-theme'
+title: 'Albiorix'
+
+
+########
+# more settings
+
+markdown: kramdown
+
+sass:
+  sass_dir: css
+  style:    expanded
+
+
+
+exclude:
+- README.md
+
+
+safe: true
+lsi: false
+
