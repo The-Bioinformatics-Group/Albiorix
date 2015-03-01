@@ -318,17 +318,17 @@ title:  'Welcome'
 
 				  To interact with the Albiorix cluster you will have to be familiar with some additional SGE commands, as well as the structure of the cluster resources. On Albiorix, a resource is either a CPU core or RAM memory. When you start an analysis, a request for resources is first sent to the cluster. The analysis will start if your request can be fulfilled, otherwise you will be asked to try again later. When your analysis starts it is sent from the frontend to one or more of the computer nodes in the cluster. At the moment only the number of free CPU cores are limiting to how many analysis can be accepted by Albiorix, and there are 142 CPU cores in total on the nodes. In the previous section we presented a number of commands that use the Sun-Grid-engine to start a phylogenetic analysis. For most of the basic work you will do on Albiorix there will be an alias or shell script that implements SGE for you. But if you don’t find what you need in the alias list or in the /usr/local/bin directory, you will have to write your own batch script for SGE. In /usr/local/info you will find a number of templates for batch scripts that you can copy and modify for your own needs. Let’s look at the file /usr/local/info/mb.run.</p>
 
-				  <DIV CLASS="indented"><pre><code>
-				  mats@pc158250:~ cat /usr/local/info/mb.sh 
+<DIV CLASS="indented"><pre><code>
+mats@pc158250:~ cat /usr/local/info/mb.sh 
 
-				  #!/bin/bash
-				  #$ -cwd 
-				  #$ -j y 
-				  #$ -S /bin/bash MPI_DIR=/usr/bin/mpirun
-				  $MPI_DIR -np $NSLOTS \
-			      /usr/local/bin/mb-3.1.2 -i <INFILE> 
-				  mats@pc158250:~
-				  </code></pre></DIV><br />
+#!/bin/bash
+#$ -cwd 
+#$ -j y 
+#$ -S /bin/bash MPI_DIR=/usr/bin/mpirun
+$MPI_DIR -np $NSLOTS \
+/usr/local/bin/mb-3.1.2 -i <INFILE> 
+mats@pc158250:~
+</code></pre></DIV><br />
 
 						  <p>The first lines starting with “#” is information passed to SGE that usually don’t have to be changed. The last two lines reads: Run MrBayes, with output to the screen, on “$NSLOTS” number of CPU’s with the input file <INFILE>. To start an analysis with this batch file, using four CPU cores ($NSLOTS = 4), you use the following command:</p>
 
