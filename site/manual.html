@@ -8,315 +8,314 @@ title:  'Welcome'
 </p>
 
 <head>
-<STYLE TYPE="text/css">
-<!--
-.indented
-   {
-      padding-left: 10pt;
-	     padding-right: 10pt;
-		    }
-			-->
-			</STYLE>
-			</head>
-
-			<p>This text is an introduction to the Albiorix cluster at <a href="http://www.bioenv.gu.se/english/?languageId=100001&contentId=-1&disableRedirect=true&returnUrl=http%3A%2F%2Fwww.bioenv.gu.se%2F">BioEnv</a> and was co-authored with <a href="http://www.dpes.gu.se/personal/larare_forskare/Henrik_Nilsson/">Henrik Nilsson</a> some years ago, to serve as a minimal user manual for the cluster. Albiorix is a set of interconnected computers dedicated to high-performance bioscience computing. Computer clusters largely go hand in hand with UNIX like operating systems. Therefore, this text also introduces pertinent parts of UNIX usage and parlance. It is, however, not intended as an&#160;exhaustive treatise of any of these topics - the interested reader is referred to the section on suggested reading - but should rather be seen as a brief getting-started guide.</p><hr />
-
-			<ul>
-			<li class="p1"><a href="#Interacting with the UNIX type operating systems">Interacting with UNIX type operating systems</a></li>
-			<li class="p1"><a href="#Onto Albiorix">Onto Albiorix</a></li>
-			<li class="p1"><a href="#Moving files to Albiorix">Moving files to Albiorix​</a></li>
-			<li class="p1"><a href="#Moving yourself to Albiorix">Moving yourself to Albiorix</a></li>
-			<li class="p1"><a href="#Once logged on...">Once logged on...<a/></li>
-			<li class="p1"><a href="#Running phylogenetic software in bash">Running phylogenetic software in bash</a></li>
-			<li class="p1"><a href="#Interactive program sessions">Interactive program sessions<a/></li>
-			<li class="p1"><a href="#Noninteractive sessions">Noninteractive sessions</a></li>
-			<li class="p1"><a href="#SGE_-_The_queue_system_on_Albiorix">SGE - The queue system on Albiorix</a></li>
-			<li class="p1"><a href="#Running_interactive_jobs">Running interactive jobs</a></li>
-			<li class="p1"><a href="#Software installed on Albiorix">Software installed on Albiorix</li>
-			<li class="p1"><a href="#Leaving Albiorix">Leaving Albiorix</a></li>
-			</ul><hr /><br />
-
-			<h2 class="p1"><a name="Interacting with the UNIX type operating systems"></a>Interacting with UNIX type operating systems</h2>
-			<p>The UNIX class of operating systems (e.g., GNU/Linux, *BSD, and MacOS X) forms the backbone of the Albiorix cluster; some knowledge of UNIX is therefore a requirement in order to interact with the cluster in a meaningful way. Most information exchange with the cluster will take part through a command line window, called a shell. On MaxOS X, it is called Terminal or X11. It is often quite well hidden in MacOS X, and you will probably have to use the "Spotlight" search utility to locate it. It is convenient to make a shortcut to X11 on your desktop, if it’s not already there. When you klick the X11 icon, an "xterm" widow will appear, and an X-server will start in the background. The X-server is necessary for you to run graphical applications on Albiorix. 
-			If you work on a computer that only has Terminal installed, the graphical applications described later on will not work. Xterm is not capable of very much in itself. It merely serves as an interface to the shell, typically the bash-shell. The Bash-shell, or bash for short, is the program we’re really interested in. It is a command interpreter that takes as input whatever you type in the xterm window and starts programs, erase or moves files, or anything else you tell it to do. This is the part of computing that often intimidates users. But fear no evil, bash is really your friend and after a few sessions in a UNIX environment you will be amazed by what you can accomplish with it.&#160;</p>
-
-			<p>Our first bash tip to the new user will be ’command completion’. Type the first letters of the command you want to invoke and hit the TAB key, and the rest of the command will be printed for you. If this doesn’t happen, hit the TAB key again and you will be presented with a list of commands that starts with the letters you just typed.&#160;Tip number two is the command man. If you know the name of the command but not what it does for you, type 'man' in front of the unknown command and hit enter. The manual pages for your unknown command will appear on the screen and you will be enlightened. Type q to exit.&#160;Tip number three is the command apropos. If your for example are looking for a program to read PDF-files you can find it by typing apropos pdf, and be presented with a list of programs that handles PDF-files in some way.</p>
-
-			<p>Clusters are made for heavy-duty computing rather than for looking nice – as graphical interfaces come thinly seeded in the cluster world (and almost always imply restrictions on performance), you should expect to interact with the cluster chiefly through a command line interface. The rest of the text in this section introduces you to some UNIX commands that you will need to know. These commands are equally valid on Albiorix as on your own computer. Thus, open a Terminal and type...</p><p><strong>pwd</strong> – present working directory, where am I in the file system? If you type pwd you will get something like '/Users/henrik' back. This means: you are in the folder Henrik, that is a sub-folder of Users.&#160;</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 henrik]$ pwd 
-			/Users/henrik 
-			[henrik@pc157080 henrik]$
-			</code></pre></DIV><br />
-
-			<p>Also note that the 'prompt' (the text to the left of the courser that ends with a '$' character) in the example above shows the name of the directory you are currently in. The full interpretation of the 'prompt' is "You are loged in as user 'henrik' of a computer called 'pc157080' and are currently in a directory that is also called 'henrik' </p>
-
-			<p><strong>ls</strong> – list files, show me the files of the present directory. The ls command is typically used as ls -lt, which lists the files of the present directory in full detail and as ordered by date of modification (most recent first). If you type ls -la, ”hidden” files will also be listed.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 important]$ ls -lt
-			total 31420
-			-rw-r--r-- 1 henrik henrik    86528 Nov  1 13:32 CInt.doc
-			drwxr-xr-x 2 henrik henrik     4096 Sep  5 14:24 OwnSite/
-			-rw-rw-r-- 1 henrik henrik    84992 Jun 12 18:32 coll.xls
-			drwxr-xr-x 5 henrik henrik     4096 May  8 17:13 thesis/
-			</code></pre></DIV><br />
-
-			<p>Note the distinction between files (CInt.doc, coll.xls) and directories (Own- Site/, thesis/). You could use ls -lt OwnSite to list the contents of the directory called 'OwnSite'.</p>
-
-			<p><strong>mkdir</strong> – make directory (folder). The command 'mkdir Alignments' will create a directory called 'Alignments' in the directory you are presently in [not always though: you are not likely to have enough access rights to write files everywhere you want in a UNIX environment]. A UNIX directory looks and behaves pretty much as you would expect it to do when compared to a Windows directory. However, names of UNIX folders and files are case sensitive: Alignments and alignments refer to two different folders.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 olle]$ ls -lt
-			total 0
-			[henrik@pc157080 olle]$ mkdir Alignments
-			[henrik@pc157080 olle]$ ls -lt
-			total 5
-			drwxr-xr-x 2 henrik henrik 4096 Nov 1 13:40 Alignments/
-			[henrik@pc157080 olle]$
-			</code></pre></DIV><br />
-
-			<p><strong>cd</strong>&#160;– change directory, go to this-and-that directory. If indeed you used mkdir to create a directory called Alignments above, you can en- ter it by typing cd Alignments. It should be empty, but check it with ls –lt. You can go back to the parent directory by typing cd .. You can traverse directories many levels away by providing absolute paths: 'cd /Users/henrik/temp/MyFolder' will always work regardless of where you are in the file system. cd Alignments will not – it is a relative path and only works when there is a directory called 'Alignments' in the directory you are presently in.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 olle]$ pwd 
-			/home/henrik/important/olle 
-			[henrik@pc157080 olle]$ cd .. 
-			[henrik@pc157080 important]$ pwd 
-			/home/henrik/important 
-			[henrik@pc157080 important]$ cd olle/ 
-			[henrik@pc157080 olle]$ cd /home/henrik/temp/ 
-			[henrik@pc157080 temp]$ pwd 
-			/home/henrik/temp 
-			[henrik@pc157080 temp]$ cd /home/henrik/important/olle/ 
-			[henrik@pc157080 olle]$ pwd 
-			/home/henrik/important/olle 
-			[henrik@pc157080 temp]$
-			</code></pre></DIV><br />
-
-			<p><strong>mv</strong>&#160;– move files. Move a file to a different location by typing 'mv <filename> <location>'. The command 'mv infile.nex tmp/' will move the file infile.nex in the current directory to the folder tmp/, also in the current directory.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[mtop@pc158250 #!/usr/bin/env python]$ ls -l
-			total 12
-			-rw-rw-r-- 1 mtop mtop  534 Jul  4 21:46 infile.nex
-			-rw-rw-r-- 1 mtop mtop   96 Jul  4 21:46 output.txt
-			drwxrwxr-x 2 mtop mtop 4096 Jul  4 21:47 tmp
-			[mtop@pc158250 #!/usr/bin/env python]$ mv infile.nex tmp/
-			[mtop@pc158250 #!/usr/bin/env python]$ ls -l 
-			total 8
-			-rw-rw-r-- 1 mtop mtop   96 Jul  4 21:46 output.txt
-			drwxrwxr-x 2 mtop mtop 4096 Jul  4 21:47 tmp
-			</code></pre></DIV><br />
-
-			<p><strong>rm</strong> – remove file, i.e. delete files or directories. Create a file by typing touch olle.txt (or with ls -lt &gt; olle.txt). Check the results with ls -lt. If you can see the file, try deleting it with 'rm olle.txt'. It should be gone forever. In fact, deleted files can not be restored or undeleted (there is no native Trash Can in UNIX), and you cannot expect to be prompted for verification of the deletion about to take place, so please be warned. rm -rf Alignments will delete the directory Alignments and all of its contents, regardless of what it is.&#160;</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 olle]$ ls -lt 
-			total 0 
-			[henrik@pc157080 olle]$ mkdir olle 
-			[henrik@pc157080 olle]$ touch sven.txt
-			[henrik@pc157080 olle]$ ls -l 
-			total 4
-			-rw-r--r-- 1 henrik henrik 0 Nov 1 13:52 sven.txt
-			drwxr-xr-x 2 henrik henrik 4096 Nov 1 13:52 olle/
-			[henrik@pc157080 olle]$ rm -rf sven.txt olle/
-			[henrik@pc157080 olle]$ ls -lt
-			total 0
-			[henrik@pc157080 olle]$
-			</code></pre></DIV><br />
-
-			<p>If you want to make your file handling safer when using rm, execute the following commands:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			echo alias rm=“rm -vi” &gt;&gt; /.bashrc
-			source /.bashrc
-			</code></pre></DIV><br />
-
-			<p class="p2">You will now be asked if you want to remove a file before it is removed.</p>
-
-			<p class="p2"><strong>cp</strong> – copy, copy files. Use 'touch olle.txt' to create an empty file named&#160;olle.txt. 'cp olle.txt sven.txt' means: "make an exact copy of olle.txt and save it as sven.txt". Similarly, 'cp olle.txt Alignments/sven.txt' means: "make a copy of olle.txt and save it as sven.txt in the folder Alignments". Use 'cp -r Alignments Oldalignments' to make a copy of an entire directory and all of its contents.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 olle]$ ls -lt 
-			total 0
-			-rw-r--r-- 1 henrik henrik 0 Nov 1 14:00 olle.txt
-			[henrik@pc157080 olle]$ cp olle.txt sven.txt
-			[henrik@pc157080 olle]$ mkdir temp
-			[henrik@pc157080 olle]$ cp sven.txt temp/
-			[henrik@pc157080 olle]$ cp -r temp/ new
-			[henrik@pc157080 olle]$ ls -lt
-			total 8
-			drwxr-xr-x 2 henrik henrik 4096 Nov 1 14:01 new/
-			drwxr-xr-x 2 henrik henrik 4096 Nov 1 14:01 temp/
-			-rw-r--r-- 1 henrik henrik    0 Nov 1 14:00 sven.txt
-			-rw-r--r-- 1 henrik henrik    0 Nov 1 14:00 olle.txt
-			</code></pre></DIV><br />
-
-			<p><strong>cat,</strong>&#160;<strong>more </strong>and<strong> less</strong> – show text files. These commands display text files but will not let you edit them. You will probably end up using them much more often than you would expect. Make a text file through 'ls -lt &gt;DirectoryListing.txt' and then type 'cat DirectoryListing.txt' or 'less DirectoryListing.txt' to view it. 'less' is convenient for viewing text files longer than one page (but not convenient for text files that are truly very large). To quite 'less' type the letter q.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 olle]$ ls -lt 
-			total 8 
-			-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 b 
-			-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 a 
-			[henrik@pc157080 olle]$ ls -lt &gt; DirectoryListing.txt 
-			[henrik@pc157080 olle]$ less DirectoryListing.txt 
-			total 8 
-			-rw-r--r-- 1 henrik henrik 0 Nov 1 14:05 DirectoryListing.txt 
-			-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 b 
-			-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 a
-			</code></pre></DIV><br />
-
-			<p class="p2">Most of the files used in the field of phylogenetic inference are plain text files, and the text editor hence plays an important part of the daily work of a present-day systematician. In fact, the text editor is probably the singe most important bioinformatics tool you will ever use, so taking the time to learn one is worthwhile. For hardcore text editing there are really only two candidates, vim (or the graphical version of it, gvim) and emacs. They are available for all possible platforms and include things like spell check, ASCII drawing, reading pdf-files, advanced ’search and replace’ etc. Another useful feature of those programs are that they can be configured to suite your needs. The user decides how the program should work and look. To learn all the funky stuff these programs can do will take some time but the basics are easy, although sometimes not that intuitive. The vim editor is based on the more than thirty year old program 'VI' that is deeply integrated in most (probably all) UNIX type operative systems (yes, its installed on&#160;your MAC too!). So by learning some basic 'VI' commands you will always be able to edit files on any system you find yourself on. If you decide not to take our advise to learn vim or emacs, there are of course alternatives. To edit text files locally and on a Mac, you may want to try TextWrangler instead – make sure to save any text file meant for the cluster with UNIX line breaks. However, once logged on to Albiorix, you have the opportunity to choose from a range of text editors. You can try one of the following: gedit, gvim, ed, nano, vim or emacs. The two former are largely mouse-driven whereas the latter four are mainly keyboard oriented. Choose one you like and learn how to use it.</p>
-
-			<h2 class="p1"><a name="Onto Albiorix"></a>Onto Albiorix</h2>
-			<p>If you feel uncomfortable working in a UNIX environment you can start of by only sending files there that are more or less ready for analysis. In the case of MrBayes, for example, you can compile, and test your file containing the alignment and MrBayes-block on your own computer before sending it to the cluster. Once you get more confident you can do all your work on the cluster.</p>
-
-			<h2><a name="Moving files to Albiorix"></a>Moving files to Albiorix</h2>
-			<p>Assuming that your file(s) is ready for analysis, and that you indeed have a user account on the cluster, you can copy file(s) to Albiorix with scp</p>
-
-			<DIV CLASS="indented"><pre><code>
-			scp olle.txt USER@pc158250.dpes.gu.se:
-			</code></pre></DIV><br />
-
-			<p>This will copy the file olle.txt (in the present directory) to the home directory of user USER on Albiorix. You will be prompted for the password of that particular user account. scp differs from cp in that transmission is encrypted so as to make eavesdropping pointless. The command can therefore be used for moving files between computers.&#160;If you are about to copy several files to Albiorix, it is often easier to merge them into an archive prior to sending them:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			zip MyArchive file1.txt file2.txt file3.txt
-			</code></pre></DIV><br />
-
-			<p>...which means: make a ZIP archive called MyArchive.zip containing the files file1.txt, file2.txt, and file3.txt. Then use scp to copy MyArchive.zip onto Albiorix (as above). The command:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			unzip MyArchive.zip
-			</code></pre></DIV><br />
-
-			<p>... will expand the archive into the files it contains – these files will be restored into the present directory [if ZIP was used as given above]. You can rest assured that the files were restored into their original state unless you are alerted to the contrary.</p>
-
-			<h2 class="p1"><a name="Moving yourself to Albiorix"></a>Moving yourself to Albiorix</h2>
-			<p>The ssh command allows you to open a Terminal window on Albiorix on your own computer:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			ssh -X USER@pc158250.dpes.gu.se
-			</code></pre></DIV><br />
-
-			<p>You will be prompted for the password of USER on Albiorix; if you give this successfully, you have logged into the cluster, and you will find yourself in the home directory of user USER (if you experience problems try the -Y flag instead of -X). Everything you see and do in your Terminal now pertains to Albiorix rather than to your own computer. This also means that you are now in a computer environment that is shared by many users and where being a good member of the community is appropriate.</p>
-
-			<h2 class="p1"><a name="Once logged on..."></a>Once logged on...</h2>
-			<p>Most of the following requires that you have a flavor of “X” installed on your computer.&#160;To start a particular program you typically just type the name of the program in the shell window; the program will start, either inside the shell window or by opening up a graphical window of its own. Most programs on the cluster are not started through clicks on their icons - indeed, most programs do not have icons at all by default - and hence the mouse plays something of a subordinate role on the cluster. For example, to start the text editor kate, simply type kate and you will be served with a small but powerful, fully graphical text editor:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 ~]$ kate
-			</code></pre></DIV><br />
-
-			<p>Note however that you will not get your prompt back in the shell window until you have closed kate. For programs that open up graphical windows of their own, you would typically append the ampersand (&amp;) operator during program invocation:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[henrik@pc157080 ~]$ kate &amp; 
-			[henrik@pc157080 ~]$
-			</code></pre></DIV><br />
-
-			<p>The ampersand operator, &amp; above, makes the shell give back the prompt to the user after having started kate. You are thus able to do other things in your shell window at the same time that kate is runing. Note: It is typically not a good idea to use the ampersand operator when invoking programs that do not open up a graphical window of their own (such as ClustalW, MrBayes, PAUP, mafft etc.).&#160;To take further advantage of the GNU/Linux environment, fire up kon- sole, the GNU/Linux equivalent of the ’X11-terminal’ window in MacOS X. This will probably make your cluster session more pleasant, but it is optional for users happy with the rather Spartan MacOSX X11 window. With kon- sole you can have several bash-sessions open on the cluster at once, without having to login several times. As a backup you probably want a graphical environment in which to manage all your files on Albiorix. The command</p>
-
-			<DIV CLASS="indented"><pre><code>
-			USER@pc158250:~$ konqueror &amp;
-			</code></pre></DIV><br />
-
-			<p>will give you just that. The program is roughly equivalent, but far superior to, the file browser in Windows or the file mode of Safari in MacOS X. With konqueror you can set up a full graphical environment on Albiorix, if that is what you are looking for. You can copy, delete, or move files using the mouse. You can even have a desktop wallpaper and program icons and set up a more or less regular desktop environment.</p>
-
-			<h2 class="p1"><a name="Running phylogenetic software in bash"></a>Running phylogenetic software in bash</h2>
-			<p>On Albiorix resources such as RAM-memory and CPU-time are managed and distributed among the users by a program called Sun-Grid-Engin or SGE for short. This means that all longer resource intensive analysis preformed by programs like MrBayes or BEST are sent to SGE and distributed to the different computers that make up the cluster. SGE will put the request from the user in a queue and execute the request when recourses are available. This means that all analysis will be run with maximum speed without having to compete with other programs. If resources are available the analysis will be started immediately and the user will only experience a short delay before the program starts. SGE takes a shell script as input and later on you will learn how to write such scripts. The functionality of SGE is also implemented in the commands described in the section that follows.</p>
-
-			<h2 class="p1"><a name="Interactive program sessions"></a>Interactive program sessions</h2>
-			<p>(i.e. you will get output from the program on your screen):</p>
-
-			<ul>
-			<li>mb.sh       You will get MrBayes, single-threaded</li>
-			<li>mb4.sh     You will get MrBayes running on four kernels ( CPU’s)</li>
-			<li>mb8.sh     ... on eight kernels</li>
-			<li>mb16.sh   ... on sixteen kernels (This command is only usefull if you set the MrBayes option “nchains=” to eight or higher!)</li>
-			</ul>
-
-			<p>For the program BEST, there is a similar set of scripts available, namely mbbest4-2.2.sh, mbbest8-2.2.sh and mbbest16-2.2.sh. To quit an interactive program type Ctrl-C (the keys “Ctrl” and “c” si- multaneously). An important thing to remember when using any of these commands is that they WILL NOT END AUTOMATICALLY when the analysis is done. Instead the program will ask if you want to end or con- tinue the analysis. This means that your analysis will continue to occupy cluster resources until you terminate it. So don’t forget to monitor your running analysis to be able to terminate them when they are done. When using any of the commands above you may get an error message similar to the following:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[mats@pc158250]:~/tests/4$ mb8.sh plastid.nex
-			Your "qrsh" request could not be scheduled, try again later.
-			[mats@pc158250]:~/tests/4$
-			</code></pre></DIV><br />
-
-			<p>This means that there are not enough cluster recourses available at the moment. Use one of the noninteractive commands instead, or try again later. Your analysis will be queued and started as soon as there are computers available, but you will not get any output from the analysis to your screen.</p>
-
-			<h2 class="p1"><a name="Noninteractive sessions"></a>Noninteractive sessions</h2>
-			<p>This section describes how to start a program that will not give you any output to the screen.</p>
-
-			<ul>
-			<li>qmb.sh        MrBayes, single-threaded</li> 
-			<li>qmb4.sh      MrBayes running on four kernels ( CPU’s)</li>
-			<li>qmb8.sh      ... on eight kernels</li>
-			<li>qmb16.sh    ... on sixteen kernels (Again, this command is only usefull if you set the MrBayes option “nchains=” to eight or higher!)</li>
-			</ul>
-
-			<p>These commands are useful if you want to run several analysis at the same time, and know how many generations each analysis should run. Let’s say you have ten MrBayes analysis you want to run. You can start them all at the same time using one of the commands that starts with a ’q’. Your analysis will be executed as soon as there are resources available. After you have used one of the noninteractive commands it is advisable to check the status of your request. Do this by typing <strong>qstat</strong>, and you will see something similar to this:</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[mats@pc158250]:~/tests/4$ qstat -f
-			job-ID      prior          name              user      state     submit/start at    ...
-			238         0.55500    PAUP-4.0b1     mats        r        11/12/2007 13:  ...
-			242         0.55500    PAUP-4.0b1     mats        r        11/12/2007 13:  ...
-			[mats@pc158250]:~/tests/4$
-			</code></pre></DIV><br />
-
-			<p>The state column indicates if your analysis is running (’r’) or queuing (’qw’). All requests are queued for a while before they are started. If you want to terminate an analysis type qdel and the job-ID of the job you want to quit. If there are no jobs running or waiting in line, qstat will not give any output.</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[mats@pc158250]:~/tests/paup4$ qdel 238 242
-			[mats@pc158250]:~/tests/paup4$ qstat
-			[mats@pc158250]:~/tests/paup4$
-			</code></pre></DIV><br />
-
-
-			<h2 class="p1"><a name="SGE_-_The_queue_system_on_Albiorix"></a>SGE - The queue system on Albiorix</h2>
-			<p>The Albiorix cluster is made up of a frontend server, the server you log on to when connecting to Albiorix, and a set of computers (called nodes) that are responsible for preforming the computation of your analysis. The nodes are organised in groups called "queues" and a queue can include one or more nodes. You can get view of the available queues and the jobs running in them, by executing the command "qstat":</p>
-
-			<DIV CLASS="indented"><pre><code>
-			[mats@albiorix ~]$ qstat
-			queuename                      qtype resv/used/tot. load_avg arch          states
-			---------------------------------------------------------------------------------
-			high_mem@compute-0-8.local     BIP   0/12/64         0.00     linux-x64    
-			7149 0.55500  trinity.sh     mtop         r     10/12/2014 10:04:42     12         
-			---------------------------------------------------------------------------------
-			node0@compute-0-7.local        BIP   0/2/48         10.02    linux-x64     
-			7147 0.55500 QLOGIN     mtop         r     10/12/2014 10:04:23     1        
-			7150 0.55500 QLOGIN     mats         r     10/13/2014 11:37:46     1        
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-1.local      BIP   0/0/8          0.07     linux-x64     
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-2.local      BIP   0/4/8          0.00     linux-x64     
-			7148 0.55500 mb.sh     mtop         r     10/12/2014 10:04:42     4   
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-3.local      BIP   0/0/4          0.06     linux-x64     
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-4.local      BIP   0/0/4          -NA-     linux-x64     au
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-5.local      BIP   0/0/4          0.00     linux-x64     
-			---------------------------------------------------------------------------------
-			sandbox@compute-0-6.local      BIP   0/0/4          0.00     linux-x64     
-			[mats@albiorix ~]$ 
-			</code></pre></DIV><br />
-
-				  <p>A closer look at the output shows that Albiorix has three queues called "high_mem", "node0" and "sandbox". The first two queues are made up of one computer each (called "compute-0-8" and "compute-0-7" respectively). Sandbox on the other hand is made up of six computers ("compute-0-1" to "compute-0-6"). Furthermore, the node "compute-0-4" is in state "au" which means it is not available at the moment. The output also shows that there are four jobs currently running on the cluster. For example, user "mtop" is running a job with the id number 7149 called "trinity.sh" on the "high_mem" queue. This queue has lots of resources available at the moment, which  is indicated by the string "0/12/64" that shows that zero CPU cores have been reserved, twelve are used and the queue has a total of 64 cores.  Here follows a description of the available queues on the system:</p>
-
-				  <p><strong>node0:</strong> This queue consists of one compute node that has 48 CPU cores and 96Gb of RAM. Roughly 4.5Tb is available on this machine. The CLC assembly cell programs is also available on this queue. This queue is suitable for parallelised analyses that requires many CPU cores.</p>
-
-				  <p><strong>high_mem:</strong> This queue also consists of one compute node, but has 64 CPU cores and 512Gb of RAM. 2Tb of disk space is available. This queue is suitable for analyses that requires many CPU cores and lots of memory.</p>
-
-				  <p><strong>sandbox:</strong> This queue consists of several servers with two, four or eight CPU cores each. Available RAM on each server differs but is sufficient for most analyses running on Albiorix. By default, all MrBayes and BEAST analyses are directed to this queue.</p>
-
-
-				  To interact with the Albiorix cluster you will have to be familiar with some additional SGE commands, as well as the structure of the cluster resources. On Albiorix, a resource is either a CPU core or RAM memory. When you start an analysis, a request for resources is first sent to the cluster. The analysis will start if your request can be fulfilled, otherwise you will be asked to try again later. When your analysis starts it is sent from the frontend to one or more of the computer nodes in the cluster. At the moment only the number of free CPU cores are limiting to how many analysis can be accepted by Albiorix, and there are 142 CPU cores in total on the nodes. In the previous section we presented a number of commands that use the Sun-Grid-engine to start a phylogenetic analysis. For most of the basic work you will do on Albiorix there will be an alias or shell script that implements SGE for you. But if you don’t find what you need in the alias list or in the /usr/local/bin directory, you will have to write your own batch script for SGE. In /usr/local/info you will find a number of templates for batch scripts that you can copy and modify for your own needs. Let’s look at the file /usr/local/info/mb.run.</p>
+	<STYLE TYPE="text/css">
+		<!--
+		.indented
+		{
+			padding-left: 10pt;
+			padding-right: 10pt;
+		}
+		-->
+	</STYLE>
+</head>
+
+<p>This text is an introduction to the Albiorix cluster at <a href="http://www.bioenv.gu.se/english/?languageId=100001&contentId=-1&disableRedirect=true&returnUrl=http%3A%2F%2Fwww.bioenv.gu.se%2F">BioEnv</a> and was co-authored with <a href="http://www.dpes.gu.se/personal/larare_forskare/Henrik_Nilsson/">Henrik Nilsson</a> some years ago, to serve as a minimal user manual for the cluster. Albiorix is a set of interconnected computers dedicated to high-performance bioscience computing. Computer clusters largely go hand in hand with UNIX like operating systems. Therefore, this text also introduces pertinent parts of UNIX usage and parlance. It is, however, not intended as an&#160;exhaustive treatise of any of these topics - the interested reader is referred to the section on suggested reading - but should rather be seen as a brief getting-started guide.</p><hr />
+
+<ul>
+<li class="p1"><a href="#Interacting with the UNIX type operating systems">Interacting with UNIX type operating systems</a></li>
+<li class="p1"><a href="#Onto Albiorix">Onto Albiorix</a></li>
+<li class="p1"><a href="#Moving files to Albiorix">Moving files to Albiorix​</a></li>
+<li class="p1"><a href="#Moving yourself to Albiorix">Moving yourself to Albiorix</a></li>
+<li class="p1"><a href="#Once logged on...">Once logged on...<a/></li>
+<li class="p1"><a href="#Running phylogenetic software in bash">Running phylogenetic software in bash</a></li>
+<li class="p1"><a href="#Interactive program sessions">Interactive program sessions<a/></li>
+<li class="p1"><a href="#Noninteractive sessions">Noninteractive sessions</a></li>
+<li class="p1"><a href="#SGE_-_The_queue_system_on_Albiorix">SGE - The queue system on Albiorix</a></li>
+<li class="p1"><a href="#Running_interactive_jobs">Running interactive jobs</a></li>
+<li class="p1"><a href="#Software installed on Albiorix">Software installed on Albiorix</li>
+<li class="p1"><a href="#Leaving Albiorix">Leaving Albiorix</a></li>
+</ul><hr /><br />
+
+<h2 class="p1"><a name="Interacting with the UNIX type operating systems"></a>Interacting with UNIX type operating systems</h2>
+<p>The UNIX class of operating systems (e.g., GNU/Linux, *BSD, and MacOS X) forms the backbone of the Albiorix cluster; some knowledge of UNIX is therefore a requirement in order to interact with the cluster in a meaningful way. Most information exchange with the cluster will take part through a command line window, called a shell. On MaxOS X, it is called Terminal or X11. It is often quite well hidden in MacOS X, and you will probably have to use the "Spotlight" search utility to locate it. It is convenient to make a shortcut to X11 on your desktop, if it’s not already there. When you klick the X11 icon, an "xterm" widow will appear, and an X-server will start in the background. The X-server is necessary for you to run graphical applications on Albiorix. 
+	If you work on a computer that only has Terminal installed, the graphical applications described later on will not work. Xterm is not capable of very much in itself. It merely serves as an interface to the shell, typically the bash-shell. The Bash-shell, or bash for short, is the program we’re really interested in. It is a command interpreter that takes as input whatever you type in the xterm window and starts programs, erase or moves files, or anything else you tell it to do. This is the part of computing that often intimidates users. But fear no evil, bash is really your friend and after a few sessions in a UNIX environment you will be amazed by what you can accomplish with it.&#160;</p>
+
+<p>Our first bash tip to the new user will be ’command completion’. Type the first letters of the command you want to invoke and hit the TAB key, and the rest of the command will be printed for you. If this doesn’t happen, hit the TAB key again and you will be presented with a list of commands that starts with the letters you just typed.&#160;Tip number two is the command man. If you know the name of the command but not what it does for you, type 'man' in front of the unknown command and hit enter. The manual pages for your unknown command will appear on the screen and you will be enlightened. Type q to exit.&#160;Tip number three is the command apropos. If your for example are looking for a program to read PDF-files you can find it by typing apropos pdf, and be presented with a list of programs that handles PDF-files in some way.</p>
+
+<p>Clusters are made for heavy-duty computing rather than for looking nice – as graphical interfaces come thinly seeded in the cluster world (and almost always imply restrictions on performance), you should expect to interact with the cluster chiefly through a command line interface. The rest of the text in this section introduces you to some UNIX commands that you will need to know. These commands are equally valid on Albiorix as on your own computer. Thus, open a Terminal and type...</p><p><strong>pwd</strong> – present working directory, where am I in the file system? If you type pwd you will get something like '/Users/henrik' back. This means: you are in the folder Henrik, that is a sub-folder of Users.&#160;</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 henrik]$ pwd 
+/Users/henrik 
+[henrik@pc157080 henrik]$
+</code></pre></DIV><br />
+
+<p>Also note that the 'prompt' (the text to the left of the courser that ends with a '$' character) in the example above shows the name of the directory you are currently in. The full interpretation of the 'prompt' is "You are loged in as user 'henrik' of a computer called 'pc157080' and are currently in a directory that is also called 'henrik' </p>
+
+<p><strong>ls</strong> – list files, show me the files of the present directory. The ls command is typically used as ls -lt, which lists the files of the present directory in full detail and as ordered by date of modification (most recent first). If you type ls -la, ”hidden” files will also be listed.</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 important]$ ls -lt
+total 31420
+-rw-r--r-- 1 henrik henrik    86528 Nov  1 13:32 CInt.doc
+drwxr-xr-x 2 henrik henrik     4096 Sep  5 14:24 OwnSite/
+-rw-rw-r-- 1 henrik henrik    84992 Jun 12 18:32 coll.xls
+drwxr-xr-x 5 henrik henrik     4096 May  8 17:13 thesis/
+</code></pre></DIV><br />
+
+<p>Note the distinction between files (CInt.doc, coll.xls) and directories (Own- Site/, thesis/). You could use ls -lt OwnSite to list the contents of the directory called 'OwnSite'.</p>
+
+<p><strong>mkdir</strong> – make directory (folder). The command 'mkdir Alignments' will create a directory called 'Alignments' in the directory you are presently in [not always though: you are not likely to have enough access rights to write files everywhere you want in a UNIX environment]. A UNIX directory looks and behaves pretty much as you would expect it to do when compared to a Windows directory. However, names of UNIX folders and files are case sensitive: Alignments and alignments refer to two different folders.</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 olle]$ ls -lt
+total 0
+[henrik@pc157080 olle]$ mkdir Alignments
+[henrik@pc157080 olle]$ ls -lt
+total 5
+drwxr-xr-x 2 henrik henrik 4096 Nov 1 13:40 Alignments/
+[henrik@pc157080 olle]$
+</code></pre></DIV><br />
+
+<p><strong>cd</strong>&#160;– change directory, go to this-and-that directory. If indeed you used mkdir to create a directory called Alignments above, you can en- ter it by typing cd Alignments. It should be empty, but check it with ls –lt. You can go back to the parent directory by typing cd .. You can traverse directories many levels away by providing absolute paths: 'cd /Users/henrik/temp/MyFolder' will always work regardless of where you are in the file system. cd Alignments will not – it is a relative path and only works when there is a directory called 'Alignments' in the directory you are presently in.</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 olle]$ pwd 
+/home/henrik/important/olle 
+[henrik@pc157080 olle]$ cd .. 
+[henrik@pc157080 important]$ pwd 
+/home/henrik/important 
+[henrik@pc157080 important]$ cd olle/ 
+[henrik@pc157080 olle]$ cd /home/henrik/temp/ 
+[henrik@pc157080 temp]$ pwd 
+/home/henrik/temp 
+[henrik@pc157080 temp]$ cd /home/henrik/important/olle/ 
+[henrik@pc157080 olle]$ pwd 
+/home/henrik/important/olle 
+[henrik@pc157080 temp]$
+</code></pre></DIV><br />
+
+<p><strong>mv</strong>&#160;– move files. Move a file to a different location by typing 'mv <filename> <location>'. The command 'mv infile.nex tmp/' will move the file infile.nex in the current directory to the folder tmp/, also in the current directory.</p>
+
+<DIV CLASS="indented"><pre><code>
+[mtop@pc158250 #!/usr/bin/env python]$ ls -l
+total 12
+-rw-rw-r-- 1 mtop mtop  534 Jul  4 21:46 infile.nex
+-rw-rw-r-- 1 mtop mtop   96 Jul  4 21:46 output.txt
+drwxrwxr-x 2 mtop mtop 4096 Jul  4 21:47 tmp
+[mtop@pc158250 #!/usr/bin/env python]$ mv infile.nex tmp/
+[mtop@pc158250 #!/usr/bin/env python]$ ls -l 
+total 8
+-rw-rw-r-- 1 mtop mtop   96 Jul  4 21:46 output.txt
+drwxrwxr-x 2 mtop mtop 4096 Jul  4 21:47 tmp
+</code></pre></DIV><br />
+
+<p><strong>rm</strong> – remove file, i.e. delete files or directories. Create a file by typing touch olle.txt (or with ls -lt &gt; olle.txt). Check the results with ls -lt. If you can see the file, try deleting it with 'rm olle.txt'. It should be gone forever. In fact, deleted files can not be restored or undeleted (there is no native Trash Can in UNIX), and you cannot expect to be prompted for verification of the deletion about to take place, so please be warned. rm -rf Alignments will delete the directory Alignments and all of its contents, regardless of what it is.&#160;</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 olle]$ ls -lt 
+total 0 
+[henrik@pc157080 olle]$ mkdir olle 
+[henrik@pc157080 olle]$ touch sven.txt
+[henrik@pc157080 olle]$ ls -l 
+total 4
+-rw-r--r-- 1 henrik henrik 0 Nov 1 13:52 sven.txt
+drwxr-xr-x 2 henrik henrik 4096 Nov 1 13:52 olle/
+[henrik@pc157080 olle]$ rm -rf sven.txt olle/
+[henrik@pc157080 olle]$ ls -lt
+total 0
+[henrik@pc157080 olle]$
+</code></pre></DIV><br />
+
+<p>If you want to make your file handling safer when using rm, execute the following commands:</p>
+
+<DIV CLASS="indented"><pre><code>
+echo alias rm=“rm -vi” &gt;&gt; /.bashrc
+source /.bashrc
+</code></pre></DIV><br />
+
+<p class="p2">You will now be asked if you want to remove a file before it is removed.</p>
+
+<p class="p2"><strong>cp</strong> – copy, copy files. Use 'touch olle.txt' to create an empty file named&#160;olle.txt. 'cp olle.txt sven.txt' means: "make an exact copy of olle.txt and save it as sven.txt". Similarly, 'cp olle.txt Alignments/sven.txt' means: "make a copy of olle.txt and save it as sven.txt in the folder Alignments". Use 'cp -r Alignments Oldalignments' to make a copy of an entire directory and all of its contents.</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 olle]$ ls -lt 
+total 0
+-rw-r--r-- 1 henrik henrik 0 Nov 1 14:00 olle.txt
+[henrik@pc157080 olle]$ cp olle.txt sven.txt
+[henrik@pc157080 olle]$ mkdir temp
+[henrik@pc157080 olle]$ cp sven.txt temp/
+[henrik@pc157080 olle]$ cp -r temp/ new
+[henrik@pc157080 olle]$ ls -lt
+total 8
+drwxr-xr-x 2 henrik henrik 4096 Nov 1 14:01 new/
+drwxr-xr-x 2 henrik henrik 4096 Nov 1 14:01 temp/
+-rw-r--r-- 1 henrik henrik    0 Nov 1 14:00 sven.txt
+-rw-r--r-- 1 henrik henrik    0 Nov 1 14:00 olle.txt
+</code></pre></DIV><br />
+
+<p><strong>cat,</strong>&#160;<strong>more </strong>and<strong> less</strong> – show text files. These commands display text files but will not let you edit them. You will probably end up using them much more often than you would expect. Make a text file through 'ls -lt &gt;DirectoryListing.txt' and then type 'cat DirectoryListing.txt' or 'less DirectoryListing.txt' to view it. 'less' is convenient for viewing text files longer than one page (but not convenient for text files that are truly very large). To quite 'less' type the letter q.</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 olle]$ ls -lt 
+total 8 
+-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 b 
+-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 a 
+[henrik@pc157080 olle]$ ls -lt &gt; DirectoryListing.txt 
+[henrik@pc157080 olle]$ less DirectoryListing.txt 
+total 8 
+-rw-r--r-- 1 henrik henrik 0 Nov 1 14:05 DirectoryListing.txt 
+-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 b 
+-rw-r--r-- 1 henrik henrik 2 Nov 1 14:04 a
+</code></pre></DIV><br />
+
+<p class="p2">Most of the files used in the field of phylogenetic inference are plain text files, and the text editor hence plays an important part of the daily work of a present-day systematician. In fact, the text editor is probably the singe most important bioinformatics tool you will ever use, so taking the time to learn one is worthwhile. For hardcore text editing there are really only two candidates, vim (or the graphical version of it, gvim) and emacs. They are available for all possible platforms and include things like spell check, ASCII drawing, reading pdf-files, advanced ’search and replace’ etc. Another useful feature of those programs are that they can be configured to suite your needs. The user decides how the program should work and look. To learn all the funky stuff these programs can do will take some time but the basics are easy, although sometimes not that intuitive. The vim editor is based on the more than thirty year old program 'VI' that is deeply integrated in most (probably all) UNIX type operative systems (yes, its installed on&#160;your MAC too!). So by learning some basic 'VI' commands you will always be able to edit files on any system you find yourself on. If you decide not to take our advise to learn vim or emacs, there are of course alternatives. To edit text files locally and on a Mac, you may want to try TextWrangler instead – make sure to save any text file meant for the cluster with UNIX line breaks. However, once logged on to Albiorix, you have the opportunity to choose from a range of text editors. You can try one of the following: gedit, gvim, ed, nano, vim or emacs. The two former are largely mouse-driven whereas the latter four are mainly keyboard oriented. Choose one you like and learn how to use it.</p>
+
+<h2 class="p1"><a name="Onto Albiorix"></a>Onto Albiorix</h2>
+<p>If you feel uncomfortable working in a UNIX environment you can start of by only sending files there that are more or less ready for analysis. In the case of MrBayes, for example, you can compile, and test your file containing the alignment and MrBayes-block on your own computer before sending it to the cluster. Once you get more confident you can do all your work on the cluster.</p>
+
+<h2><a name="Moving files to Albiorix"></a>Moving files to Albiorix</h2>
+<p>Assuming that your file(s) is ready for analysis, and that you indeed have a user account on the cluster, you can copy file(s) to Albiorix with scp</p>
+
+<DIV CLASS="indented"><pre><code>
+scp olle.txt USER@pc158250.dpes.gu.se:
+</code></pre></DIV><br />
+
+<p>This will copy the file olle.txt (in the present directory) to the home directory of user USER on Albiorix. You will be prompted for the password of that particular user account. scp differs from cp in that transmission is encrypted so as to make eavesdropping pointless. The command can therefore be used for moving files between computers.&#160;If you are about to copy several files to Albiorix, it is often easier to merge them into an archive prior to sending them:</p>
+
+<DIV CLASS="indented"><pre><code>
+zip MyArchive file1.txt file2.txt file3.txt
+</code></pre></DIV><br />
+
+<p>...which means: make a ZIP archive called MyArchive.zip containing the files file1.txt, file2.txt, and file3.txt. Then use scp to copy MyArchive.zip onto Albiorix (as above). The command:</p>
+
+<DIV CLASS="indented"><pre><code>
+unzip MyArchive.zip
+</code></pre></DIV><br />
+
+<p>... will expand the archive into the files it contains – these files will be restored into the present directory [if ZIP was used as given above]. You can rest assured that the files were restored into their original state unless you are alerted to the contrary.</p>
+
+<h2 class="p1"><a name="Moving yourself to Albiorix"></a>Moving yourself to Albiorix</h2>
+<p>The ssh command allows you to open a Terminal window on Albiorix on your own computer:</p>
+
+<DIV CLASS="indented"><pre><code>
+ssh -X USER@pc158250.dpes.gu.se
+</code></pre></DIV><br />
+
+<p>You will be prompted for the password of USER on Albiorix; if you give this successfully, you have logged into the cluster, and you will find yourself in the home directory of user USER (if you experience problems try the -Y flag instead of -X). Everything you see and do in your Terminal now pertains to Albiorix rather than to your own computer. This also means that you are now in a computer environment that is shared by many users and where being a good member of the community is appropriate.</p>
+
+<h2 class="p1"><a name="Once logged on..."></a>Once logged on...</h2>
+<p>Most of the following requires that you have a flavor of “X” installed on your computer.&#160;To start a particular program you typically just type the name of the program in the shell window; the program will start, either inside the shell window or by opening up a graphical window of its own. Most programs on the cluster are not started through clicks on their icons - indeed, most programs do not have icons at all by default - and hence the mouse plays something of a subordinate role on the cluster. For example, to start the text editor kate, simply type kate and you will be served with a small but powerful, fully graphical text editor:</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 ~]$ kate
+</code></pre></DIV><br />
+
+<p>Note however that you will not get your prompt back in the shell window until you have closed kate. For programs that open up graphical windows of their own, you would typically append the ampersand (&amp;) operator during program invocation:</p>
+
+<DIV CLASS="indented"><pre><code>
+[henrik@pc157080 ~]$ kate &amp; 
+[henrik@pc157080 ~]$
+</code></pre></DIV><br />
+
+<p>The ampersand operator, &amp; above, makes the shell give back the prompt to the user after having started kate. You are thus able to do other things in your shell window at the same time that kate is runing. Note: It is typically not a good idea to use the ampersand operator when invoking programs that do not open up a graphical window of their own (such as ClustalW, MrBayes, PAUP, mafft etc.).&#160;To take further advantage of the GNU/Linux environment, fire up kon- sole, the GNU/Linux equivalent of the ’X11-terminal’ window in MacOS X. This will probably make your cluster session more pleasant, but it is optional for users happy with the rather Spartan MacOSX X11 window. With kon- sole you can have several bash-sessions open on the cluster at once, without having to login several times. As a backup you probably want a graphical environment in which to manage all your files on Albiorix. The command</p>
+
+<DIV CLASS="indented"><pre><code>
+USER@pc158250:~$ konqueror &amp;
+</code></pre></DIV><br />
+
+<p>will give you just that. The program is roughly equivalent, but far superior to, the file browser in Windows or the file mode of Safari in MacOS X. With konqueror you can set up a full graphical environment on Albiorix, if that is what you are looking for. You can copy, delete, or move files using the mouse. You can even have a desktop wallpaper and program icons and set up a more or less regular desktop environment.</p>
+
+<h2 class="p1"><a name="Running phylogenetic software in bash"></a>Running phylogenetic software in bash</h2>
+<p>On Albiorix resources such as RAM-memory and CPU-time are managed and distributed among the users by a program called Sun-Grid-Engin or SGE for short. This means that all longer resource intensive analysis preformed by programs like MrBayes or BEST are sent to SGE and distributed to the different computers that make up the cluster. SGE will put the request from the user in a queue and execute the request when recourses are available. This means that all analysis will be run with maximum speed without having to compete with other programs. If resources are available the analysis will be started immediately and the user will only experience a short delay before the program starts. SGE takes a shell script as input and later on you will learn how to write such scripts. The functionality of SGE is also implemented in the commands described in the section that follows.</p>
+
+<h2 class="p1"><a name="Interactive program sessions"></a>Interactive program sessions</h2>
+<p>(i.e. you will get output from the program on your screen):</p>
+
+<ul>
+<li>mb.sh       You will get MrBayes, single-threaded</li>
+<li>mb4.sh     You will get MrBayes running on four kernels ( CPU’s)</li>
+<li>mb8.sh     ... on eight kernels</li>
+<li>mb16.sh   ... on sixteen kernels (This command is only usefull if you set the MrBayes option “nchains=” to eight or higher!)</li>
+</ul>
+
+<p>For the program BEST, there is a similar set of scripts available, namely mbbest4-2.2.sh, mbbest8-2.2.sh and mbbest16-2.2.sh. To quit an interactive program type Ctrl-C (the keys “Ctrl” and “c” si- multaneously). An important thing to remember when using any of these commands is that they WILL NOT END AUTOMATICALLY when the analysis is done. Instead the program will ask if you want to end or con- tinue the analysis. This means that your analysis will continue to occupy cluster resources until you terminate it. So don’t forget to monitor your running analysis to be able to terminate them when they are done. When using any of the commands above you may get an error message similar to the following:</p>
+
+<DIV CLASS="indented"><pre><code>
+[mats@pc158250]:~/tests/4$ mb8.sh plastid.nex
+Your "qrsh" request could not be scheduled, try again later.
+[mats@pc158250]:~/tests/4$
+</code></pre></DIV><br />
+
+<p>This means that there are not enough cluster recourses available at the moment. Use one of the noninteractive commands instead, or try again later. Your analysis will be queued and started as soon as there are computers available, but you will not get any output from the analysis to your screen.</p>
+
+<h2 class="p1"><a name="Noninteractive sessions"></a>Noninteractive sessions</h2>
+<p>This section describes how to start a program that will not give you any output to the screen.</p>
+
+<ul>
+<li>qmb.sh        MrBayes, single-threaded</li> 
+<li>qmb4.sh      MrBayes running on four kernels ( CPU’s)</li>
+<li>qmb8.sh      ... on eight kernels</li>
+<li>qmb16.sh    ... on sixteen kernels (Again, this command is only usefull if you set the MrBayes option “nchains=” to eight or higher!)</li>
+</ul>
+
+<p>These commands are useful if you want to run several analysis at the same time, and know how many generations each analysis should run. Let’s say you have ten MrBayes analysis you want to run. You can start them all at the same time using one of the commands that starts with a ’q’. Your analysis will be executed as soon as there are resources available. After you have used one of the noninteractive commands it is advisable to check the status of your request. Do this by typing <strong>qstat</strong>, and you will see something similar to this:</p>
+
+<DIV CLASS="indented"><pre><code>
+[mats@pc158250]:~/tests/4$ qstat -f
+job-ID      prior          name              user      state     submit/start at    ...
+238         0.55500    PAUP-4.0b1     mats        r        11/12/2007 13:  ...
+242         0.55500    PAUP-4.0b1     mats        r        11/12/2007 13:  ...
+[mats@pc158250]:~/tests/4$
+</code></pre></DIV><br />
+
+<p>The state column indicates if your analysis is running (’r’) or queuing (’qw’). All requests are queued for a while before they are started. If you want to terminate an analysis type qdel and the job-ID of the job you want to quit. If there are no jobs running or waiting in line, qstat will not give any output.</p>
+
+<DIV CLASS="indented"><pre><code>
+[mats@pc158250]:~/tests/paup4$ qdel 238 242
+[mats@pc158250]:~/tests/paup4$ qstat
+[mats@pc158250]:~/tests/paup4$
+</code></pre></DIV><br />
+
+<h2 class="p1"><a name="SGE_-_The_queue_system_on_Albiorix"></a>SGE - The queue system on Albiorix</h2>
+<p>The Albiorix cluster is made up of a frontend server, the server you log on to when connecting to Albiorix, and a set of computers (called nodes) that are responsible for preforming the computation of your analysis. The nodes are organised in groups called "queues" and a queue can include one or more nodes. You can get view of the available queues and the jobs running in them, by executing the command "qstat":</p>
+
+<DIV CLASS="indented"><pre><code>
+[mats@albiorix ~]$ qstat
+queuename                      qtype resv/used/tot. load_avg arch          states
+---------------------------------------------------------------------------------
+high_mem@compute-0-8.local     BIP   0/12/64         0.00     linux-x64    
+7149 0.55500  trinity.sh     mtop         r     10/12/2014 10:04:42     12         
+---------------------------------------------------------------------------------
+node0@compute-0-7.local        BIP   0/2/48         10.02    linux-x64     
+7147 0.55500 QLOGIN     mtop         r     10/12/2014 10:04:23     1        
+7150 0.55500 QLOGIN     mats         r     10/13/2014 11:37:46     1        
+---------------------------------------------------------------------------------
+sandbox@compute-0-1.local      BIP   0/0/8          0.07     linux-x64     
+---------------------------------------------------------------------------------
+sandbox@compute-0-2.local      BIP   0/4/8          0.00     linux-x64     
+7148 0.55500 mb.sh     mtop         r     10/12/2014 10:04:42     4   
+---------------------------------------------------------------------------------
+sandbox@compute-0-3.local      BIP   0/0/4          0.06     linux-x64     
+---------------------------------------------------------------------------------
+sandbox@compute-0-4.local      BIP   0/0/4          -NA-     linux-x64     au
+---------------------------------------------------------------------------------
+sandbox@compute-0-5.local      BIP   0/0/4          0.00     linux-x64     
+---------------------------------------------------------------------------------
+sandbox@compute-0-6.local      BIP   0/0/4          0.00     linux-x64     
+[mats@albiorix ~]$ 
+</code></pre></DIV><br />
+
+<p>A closer look at the output shows that Albiorix has three queues called "high_mem", "node0" and "sandbox". The first two queues are made up of one computer each (called "compute-0-8" and "compute-0-7" respectively). Sandbox on the other hand is made up of six computers ("compute-0-1" to "compute-0-6"). Furthermore, the node "compute-0-4" is in state "au" which means it is not available at the moment. The output also shows that there are four jobs currently running on the cluster. For example, user "mtop" is running a job with the id number 7149 called "trinity.sh" on the "high_mem" queue. This queue has lots of resources available at the moment, which  is indicated by the string "0/12/64" that shows that zero CPU cores have been reserved, twelve are used and the queue has a total of 64 cores.  Here follows a description of the available queues on the system:</p>
+
+<p><strong>node0:</strong> This queue consists of one compute node that has 48 CPU cores and 96Gb of RAM. Roughly 4.5Tb is available on this machine. The CLC assembly cell programs is also available on this queue. This queue is suitable for parallelised analyses that requires many CPU cores.</p>
+
+<p><strong>high_mem:</strong> This queue also consists of one compute node, but has 64 CPU cores and 512Gb of RAM. 2Tb of disk space is available. This queue is suitable for analyses that requires many CPU cores and lots of memory.</p>
+
+<p><strong>sandbox:</strong> This queue consists of several servers with two, four or eight CPU cores each. Available RAM on each server differs but is sufficient for most analyses running on Albiorix. By default, all MrBayes and BEAST analyses are directed to this queue.</p>
+
+
+<p>To interact with the Albiorix cluster you will have to be familiar with some additional SGE commands, as well as the structure of the cluster resources. On Albiorix, a resource is either a CPU core or RAM memory. When you start an analysis, a request for resources is first sent to the cluster. The analysis will start if your request can be fulfilled, otherwise you will be asked to try again later. When your analysis starts it is sent from the frontend to one or more of the computer nodes in the cluster. At the moment only the number of free CPU cores are limiting to how many analysis can be accepted by Albiorix, and there are 142 CPU cores in total on the nodes. In the previous section we presented a number of commands that use the Sun-Grid-engine to start a phylogenetic analysis. For most of the basic work you will do on Albiorix there will be an alias or shell script that implements SGE for you. But if you don’t find what you need in the alias list or in the /usr/local/bin directory, you will have to write your own batch script for SGE. In /usr/local/info you will find a number of templates for batch scripts that you can copy and modify for your own needs. Let’s look at the file /usr/local/info/mb.run.</p>
 
 <DIV CLASS="indented"><pre><code>
 mats@pc158250:~ cat /usr/local/info/mb.sh 
@@ -330,56 +329,53 @@ $MPI_DIR -np $NSLOTS \
 mats@pc158250:~
 </code></pre></DIV><br />
 
-						  <p>The first lines starting with “#” is information passed to SGE that usually don’t have to be changed. The last two lines reads: Run MrBayes, with output to the screen, on “$NSLOTS” number of CPU’s with the input file <INFILE>. To start an analysis with this batch file, using four CPU cores ($NSLOTS = 4), you use the following command:</p>
+<p>The first lines starting with “#” is information passed to SGE that usually don’t have to be changed. The last two lines reads: Run MrBayes, with output to the screen, on “$NSLOTS” number of CPU’s with the input file <INFILE>. To start an analysis with this batch file, using four CPU cores ($NSLOTS = 4), you use the following command:</p>
 
-						  <DIV CLASS="indented"><pre><code>
-						  mats@pc158250:~ qsub -pe mpich 4 mb.sh
-						  </code></pre></DIV><br />
+<DIV CLASS="indented"><pre><code>
+mats@pc158250:~ qsub -pe mpich 4 mb.sh
+</code></pre></DIV><br />
 
-						  <p>Just change <INFILE>in the batch file to whatever the name of your nexus file containing a MrBayes block is. Here follows the steps needed to make your own batch file for SGE.</p>
+<p>Just change <INFILE>in the batch file to whatever the name of your nexus file containing a MrBayes block is. Here follows the steps needed to make your own batch file for SGE.</p>
 
-						  <ol>
-						  <li>Copy the batch script you want to use as a template to the folder containing your nexus file</li>
-						  <li>Use your favorite text editor to change the batch script to suit your needs. Give it an informative name preferably ending with “.sh” (in this example we call the file “mb16.sh”)</li>
-						  <li>Make sure the script is executable, if not use the command chmod +x mb16.sh to accomplish this</li>
-						  <li>Execute the script with the command qsub -pe mpich 16 mb16.sh</li>
-						  </ol>
+<ol>
+<li>Copy the batch script you want to use as a template to the folder containing your nexus file</li>
+<li>Use your favorite text editor to change the batch script to suit your needs. Give it an informative name preferably ending with “.sh” (in this example we call the file “mb16.sh”)</li>
+<li>Make sure the script is executable, if not use the command chmod +x mb16.sh to accomplish this</li>
+<li>Execute the script with the command qsub -pe mpich 16 mb16.sh</li>
+</ol>
 
-						  <p>The batch script can later be reused if you’d like to redo your analysis or use the same settings on a different dataset. In the latter case you only need to change the name of the input file. If you want to run any other program in parallel on Albiorix, you only change the line /usr/local/bin/mb-3.1.2 -i to the full path of the program you want to use.</p>
+<p>The batch script can later be reused if you’d like to redo your analysis or use the same settings on a different dataset. In the latter case you only need to change the name of the input file. If you want to run any other program in parallel on Albiorix, you only change the line /usr/local/bin/mb-3.1.2 -i to the full path of the program you want to use.</p>
 
-						  <p>Use the command "qdel" followed by a job id to terminate a job that has been submitted to the queue system. The job id's can be found using the command "qstat" as shown previously.</p> 
+<p>Use the command "qdel" followed by a job id to terminate a job that has been submitted to the queue system. The job id's can be found using the command "qstat" as shown previously.</p> 
 
-						  <h2 class="p1"><a name="Running_interactive_jobs"></a>Running interactive jobs</h2>
+<h2 class="p1"><a name="Running_interactive_jobs"></a>Running interactive jobs</h2>
 
-						  <p>Sometimes you might want to work interactively on the cluster, for example to be able to type in your commands one after the other, and be able to see what is outputted to the screen. Interactive jobs are started by running the command "qlogin", followed by the name of the desired queue you'd like to work in:</p>
+<p>Sometimes you might want to work interactively on the cluster, for example to be able to type in your commands one after the other, and be able to see what is outputted to the screen. Interactive jobs are started by running the command "qlogin", followed by the name of the desired queue you'd like to work in:</p>
 
-						  <DIV CLASS="indented"><pre><code>
-						  mats@pc158250:~ qlogin -q sandbox
-						  Requested time [in hours]: 5
-						  </code></pre></DIV><br />
+<DIV CLASS="indented"><pre><code>
+mats@pc158250:~ qlogin -q sandbox
+Requested time [in hours]: 5
+</code></pre></DIV><br />
 
-						  <p>This command will give you access to one CPU core on one of the nodes in the sandbox queue for five hours. You can also request more resources if your analysis will require several CPU cores. For example, if you need four CPU cores from the sandbox queue for 24 hours, run the following command:</p>
+<p>This command will give you access to one CPU core on one of the nodes in the sandbox queue for five hours. You can also request more resources if your analysis will require several CPU cores. For example, if you need four CPU cores from the sandbox queue for 24 hours, run the following command:</p>
 
-						  <DIV CLASS="indented"><pre><code>
-						  mats@pc158250:~ qlogin -q sandbox -pe mpich 4
-						  Requested time [in hours]: 24
-						  </code></pre></DIV><br />
+<DIV CLASS="indented"><pre><code>
+mats@pc158250:~ qlogin -q sandbox -pe mpich 4
+Requested time [in hours]: 24
+</code></pre></DIV><br />
 
+<h2 class="p1"><a name="Software installed on Albiorix"></a>Software installed on Albiorix</h2>
+<p>Look in /usr/local/bin for a list of the phylogenetic tools installed on Albiorix. If there is some software that you like to use that’s not in there, let us know by sending an e-mail to <a href="mailto:&#109;&#97;&#116;&#115;&#46;&#116;&#111;&#112;&#101;&#108;&#64;&#100;&#112;&#101;&#115;&#46;&#103;&#117;&#46;&#115;&#101;?subject=Albiorix">&#109;&#97;&#116;&#115;&#46;&#116;&#111;&#112;&#101;&#108;&#64;&#100;&#112;&#101;&#115;&#46;&#103;&#117;&#46;&#115;&#101;</a>. Software changes and development on popular packages are almost constant as new bug’s are discovered and fixes for them implemented in new versions. Therefor executables (read programs) installed on Albiorix are often named according to what version of the program it is. When a new version of a program is installed, the old one will still be available on the cluster. This makes it easier to know what version of the program has been used, and to be able to redo any analysis in the future. Here follows a short description of how programs are named on Albiorix. For educational purposes we use the made-up name qmb16-4.sh. The name carry the following information:</p>
 
-						  <h2 class="p1"><a name="Software installed on Albiorix"></a>Software installed on Albiorix</h2>
-						  <p>Look in /usr/local/bin for a list of the phylogenetic tools installed on Albiorix. If there is some software that you like to use that’s not in there, let us know by sending an e-mail to <a href="mailto:&#109;&#97;&#116;&#115;&#46;&#116;&#111;&#112;&#101;&#108;&#64;&#100;&#112;&#101;&#115;&#46;&#103;&#117;&#46;&#115;&#101;?subject=Albiorix">&#109;&#97;&#116;&#115;&#46;&#116;&#111;&#112;&#101;&#108;&#64;&#100;&#112;&#101;&#115;&#46;&#103;&#117;&#46;&#115;&#101;</a>. Software changes and development on popular packages are almost constant as new bug’s are discovered and fixes for them implemented in new versions. Therefor executables (read programs) installed on Albiorix are often named according to what version of the program it is. When a new version of a program is installed, the old one will still be available on the cluster. This makes it easier to know what version of the program has been used, and to be able to redo any analysis in the future. Here follows a short description of how programs are named on Albiorix. For educational purposes we use the made-up name qmb16-4.sh. The name carry the following information:</p>
+<ul>
+<li>q	The program will be automatically queued if not enough resources are available, and will not send any output to the screen</li>
+<li>mb	The program MrBayes will be started</li> 
+<li>16	Sixteen CPU kernels will be used</li>
+<li>-4	Version four of MrBayes will be used</li>
+<li>.sh	The command is a script that tells SGE to start the desired program</li>
+</ul>
 
-						  <ul>
-						  <li>q	The program will be automatically queued if not enough resources are available, and will not send any output to the screen</li>
-						  <li>mb	The program MrBayes will be started</li> 
-						  <li>16	Sixteen CPU kernels will be used</li>
-						  <li>-4	Version four of MrBayes will be used</li>
-						  <li>.sh	The command is a script that tells SGE to start the desired program</li>
-						  </ul>
+<p>Sometimes you may come across a binary file with “-noreadline32” in the name. This has to do with the fact that not all programs are capable of preforming all there duties in a 64-bit environment. Therefor some of the programs are compiles on a 32-bit computer instead. Unfortunately this sometimes makes the use of the “readline library” problematic, and the program is therefor compiled without support for that.</p>
 
-						  <p>Sometimes you may come across a binary file with “-noreadline32” in the name. This has to do with the fact that not all programs are capable of preforming all there duties in a 64-bit environment. Therefor some of the programs are compiles on a 32-bit computer instead. Unfortunately this sometimes makes the use of the “readline library” problematic, and the program is therefor compiled without support for that.</p>
-
-						  <h2 class="p1"><a name="Leaving Albiorix"></a>Leaving Albiorix</h2>
-						  <p>To logout from Albiorix, type exit or Ctrl-D in the Terminal window you logged in with. Stop all graphical programs running first. If you forget this the login shell will be blank. Kill all graphical applications running and you will get your prompt back.</p>
-
-
+<h2 class="p1"><a name="Leaving Albiorix"></a>Leaving Albiorix</h2>
+<p>To logout from Albiorix, type exit or Ctrl-D in the Terminal window you logged in with. Stop all graphical programs running first. If you forget this the login shell will be blank. Kill all graphical applications running and you will get your prompt back.</p>
