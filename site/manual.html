@@ -289,23 +289,23 @@ title:  'Welcome'
 			7149 0.55500  trinity.sh     mtop         r     10/12/2014 10:04:42     12         
 			---------------------------------------------------------------------------------
 			node0@compute-0-7.local        BIP   0/2/48         10.02    linux-x64     
-			   7147 0.55500 QLOGIN     mtop         r     10/12/2014 10:04:23     1        
-			      7150 0.55500 QLOGIN     mats         r     10/13/2014 11:37:46     1        
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-1.local      BIP   0/0/8          0.07     linux-x64     
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-2.local      BIP   0/4/8          0.00     linux-x64     
-				  7148 0.55500 mb.sh     mtop         r     10/12/2014 10:04:42     4   
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-3.local      BIP   0/0/4          0.06     linux-x64     
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-4.local      BIP   0/0/4          -NA-     linux-x64     au
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-5.local      BIP   0/0/4          0.00     linux-x64     
-				  ---------------------------------------------------------------------------------
-				  sandbox@compute-0-6.local      BIP   0/0/4          0.00     linux-x64     
-				  [mats@albiorix ~]$ 
-				  </code></pre></DIV><br />
+			7147 0.55500 QLOGIN     mtop         r     10/12/2014 10:04:23     1        
+			7150 0.55500 QLOGIN     mats         r     10/13/2014 11:37:46     1        
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-1.local      BIP   0/0/8          0.07     linux-x64     
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-2.local      BIP   0/4/8          0.00     linux-x64     
+			7148 0.55500 mb.sh     mtop         r     10/12/2014 10:04:42     4   
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-3.local      BIP   0/0/4          0.06     linux-x64     
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-4.local      BIP   0/0/4          -NA-     linux-x64     au
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-5.local      BIP   0/0/4          0.00     linux-x64     
+			---------------------------------------------------------------------------------
+			sandbox@compute-0-6.local      BIP   0/0/4          0.00     linux-x64     
+			[mats@albiorix ~]$ 
+			</code></pre></DIV><br />
 
 				  <p>A closer look at the output shows that Albiorix has three queues called "high_mem", "node0" and "sandbox". The first two queues are made up of one computer each (called "compute-0-8" and "compute-0-7" respectively). Sandbox on the other hand is made up of six computers ("compute-0-1" to "compute-0-6"). Furthermore, the node "compute-0-4" is in state "au" which means it is not available at the moment. The output also shows that there are four jobs currently running on the cluster. For example, user "mtop" is running a job with the id number 7149 called "trinity.sh" on the "high_mem" queue. This queue has lots of resources available at the moment, which  is indicated by the string "0/12/64" that shows that zero CPU cores have been reserved, twelve are used and the queue has a total of 64 cores.  Here follows a description of the available queues on the system:</p>
 
@@ -326,9 +326,9 @@ title:  'Welcome'
 				  #$ -j y 
 				  #$ -S /bin/bash MPI_DIR=/usr/bin/mpirun
 				  $MPI_DIR -np $NSLOTS \
-				          /usr/local/bin/mb-3.1.2 -i <INFILE> 
-						  mats@pc158250:~
-						  </code></pre></DIV><br />
+			      /usr/local/bin/mb-3.1.2 -i <INFILE> 
+				  mats@pc158250:~
+				  </code></pre></DIV><br />
 
 						  <p>The first lines starting with “#” is information passed to SGE that usually don’t have to be changed. The last two lines reads: Run MrBayes, with output to the screen, on “$NSLOTS” number of CPU’s with the input file <INFILE>. To start an analysis with this batch file, using four CPU cores ($NSLOTS = 4), you use the following command:</p>
 
