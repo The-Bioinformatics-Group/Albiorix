@@ -23,8 +23,13 @@ parser.add_argument("-s", "--seconds", action="store_true", help="Report statist
 parser.add_argument("-c", "--cpu", action="store_true", help="Show total CPU usage.")
 parser.add_argument("-q", "--queue", action="store_true", help="Show statistics per queue.")
 parser.add_argument("-u", "--user", action="store", help="User to show statistics for.", default="$USER")
-parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.")
+parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.", default="Primary_group")
 args = parser.parse_args()
+
+# Amazon Virtual server (EC2) prices
+
+
+
 
 class Stats(object):
 	def __init__(self, raw_stats):
@@ -58,6 +63,9 @@ class Stats(object):
 		# Return the total CPU usage 
 		self.total = 0
 		self.out = ""
+		if args.verbose:
+			self.out += str(self.get_user())
+			self.out += " " 
 		for queue in self.cpu_time:
 			self.total += float(queue[1])
 		if args.seconds == True:
@@ -73,24 +81,30 @@ class Stats(object):
 			
 	
 	def get_per_queue_cpu(self):
+		out = ""
 		for queue in self.cpu_time:
-			print queue[0], round(float(queue[1]), 1)
+			if args.seconds == True:
+				out += str(queue[0]) + " " + str(round(float(queue[1]), 1)) + " seconds" + "\n"
+			else:
+				out += str(queue[0]) + " " + str(round(float(queue[1])/60/60, 1)) + " hours" + "\n"
+		return out.rstrip()
 
 	def get_memory(self):
 		return self.memory
 
 def user_stats(days):
-	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (argv.user, days)], stdout=subprocess.PIPE, shell=True)
+	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (args.user, days)], stdout=subprocess.PIPE, shell=True)
 	stats_owner = out_owner.communicate()
 #	print stats_owner[0].split("\n")[2:]			# Devel.
 	return Stats(stats_owner[0].split("\n")[2:])
 
 def group_stats(days):
-	# Figure out the default group
+	# Figure out the primary group if not set
+#	if args.group == "Primary_group":
 	my_group_out = subprocess.Popen(["groups $USER"], stdout=subprocess.PIPE, shell=True)
 	my_group = my_group_out.communicate()[0]
 	group = my_group.split(":")[1].split()[0]
-
+#	else:
 	out_group = subprocess.Popen(["qacct -g %s -d %s -q" % (group, days)], stdout=subprocess.PIPE, shell=True)
 	stats_group = out_group.communicate()
 	return Stats(stats_group[0].split("\n")[2:])
@@ -103,13 +117,19 @@ def main():
 	user = user_stats(args.days)
 	# Group
 	group = group_stats(args.days)
-	
+
 	# Print result to STDOUT
+#	if args.verbose:
+#		print(user.get_user()),
+
+	print args.group
+
 	if args.cpu:
 		print user.get_total_cpu()
+#		print group.get_total_cpu()
 	if args.queue:
 		print user.get_per_queue_cpu()
-	
+#		print group.get_per_queue_cpu()
 
 
 
