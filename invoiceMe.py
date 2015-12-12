@@ -16,21 +16,35 @@ except ImportError:
 	else:
 		sys.exit("[Error] Exiting due to missing dependency 'argparser'")
 														        
-parser = argparse.ArgumentParser(prog="ADD-SCRIPT-NAME-HERE")
+parser = argparse.ArgumentParser(prog="invoiceMe.py")
 parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbose")
+parser.add_argument("-d", "--days", action="store", help="Number of days to report statistics from.", default=30)
+parser.add_argument("-s", "--seconds", action="store_true", help="Report statistics in seconds.", default=False)
+parser.add_argument("-c", "--cpu", action="store_true", help="Show total CPU usage.")
+parser.add_argument("-q", "--queue", action="store_true", help="Show statistics per queue.")
 args = parser.parse_args()
 
 class Stats(object):
 	def __init__(self, raw_stats):
-		self.stats = raw_stats.split()
-		self.user = self.stats[0]		# User or group
-		self.wallclock = self.stats[1]
-		self.user_time = self.stats[2]		# User or group
-		self.system_time = self.stats[3]
-		self.cpu_time = self.stats[4]
-		self.memory = self.stats[5]
-		self.IO = self.stats[6]
-		self.IOW = self.stats[7]
+		self.stats = raw_stats
+		self.user = self.stats[0].split()[1]
+		self.wallclock = []
+		self.user_time = []
+		self.system_time = []
+		self.cpu_time = []
+		self.memory = []
+		self.IO = []
+		self.IOW = []
+
+		for queue in self.stats[:-1]:
+			self.queue_name = queue.split()[0]
+			self.wallclock.append( (self.queue_name, queue.split()[2]) )
+			self.user_time.append( (self.queue_name, queue.split()[3]) )		# User or group
+			self.system_time.append( (self.queue_name, queue.split()[4]) )
+			self.cpu_time.append( (self.queue_name, queue.split()[5]) )
+			self.memory.append( (self.queue_name, queue.split()[6]) )
+			self.IO.append( (self.queue_name, queue.split()[7]) )
+			self.IOW.append( (self.queue_name, queue.split()[8]) )
 
 	def get_user(self):
 		return self.user
@@ -38,16 +52,36 @@ class Stats(object):
 	def get_wallclock(self):
 		return self.wallclock
 
-	def get_cpu(self):
-		return self.cpu_time
+	def get_total_cpu(self):
+		# Return the total CPU usage 
+		self.total = 0
+		self.out = ""
+		for queue in self.cpu_time:
+			self.total += float(queue[1])
+		if args.seconds == True:
+			self.out += str(self.total)
+			if args.verbose:
+				self.out += " seconds"
+		else:
+			self.out += str(round(self.total/60/60, 1))
+			if args.verbose:
+				self.out += " hours"
+		return self.out
+	
+			
+	
+	def get_per_queue_cpu(self):
+		for queue in self.cpu_time:
+			print queue[0], round(float(queue[1]), 1)
 
 	def get_memory(self):
 		return self.memory
 
 def user_stats(days):
-	out_owner = subprocess.Popen(["qacct -o $USER -d %s" % days], stdout=subprocess.PIPE, shell=True)
+	out_owner = subprocess.Popen(["qacct -o $USER -q -d %s" % days], stdout=subprocess.PIPE, shell=True)
 	stats_owner = out_owner.communicate()
-	return Stats(stats_owner[0].split("\n")[2])
+#	print stats_owner[0].split("\n")[2:]			# Devel.
+	return Stats(stats_owner[0].split("\n")[2:])
 
 def group_stats(days):
 	# Figure out the default group
@@ -55,21 +89,25 @@ def group_stats(days):
 	my_group = my_group_out.communicate()[0]
 	group = my_group.split(":")[1].split()[0]
 
-	out_group = subprocess.Popen(["qacct -g %s -d 30" % group], stdout=subprocess.PIPE, shell=True)
+	out_group = subprocess.Popen(["qacct -g %s -d %s -q" % (group, days)], stdout=subprocess.PIPE, shell=True)
 	stats_group = out_group.communicate()
-	return Stats(stats_group[0].split("\n")[2])
+	return Stats(stats_group[0].split("\n")[2:])
+
 
 def main():
 	# Grab the stats for the last 30 days from the system
 
 	# User
-	user_month = user_stats(30)
-	user_year = user_stats(365)	
+	user = user_stats(args.days)
 	# Group
-	group_month = group_stats(30)
-	group_year = group_stats(365)
-
-	print "Hi " + user_month.get_user()
+	group = group_stats(args.days)
+	
+	# Print result to STDOUT
+	if args.cpu:
+		print user.get_total_cpu()
+	if args.queue:
+		print user.get_per_queue_cpu()
+	
 
 
 
