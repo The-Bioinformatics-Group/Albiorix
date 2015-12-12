@@ -22,6 +22,8 @@ parser.add_argument("-d", "--days", action="store", help="Number of days to repo
 parser.add_argument("-s", "--seconds", action="store_true", help="Report statistics in seconds.", default=False)
 parser.add_argument("-c", "--cpu", action="store_true", help="Show total CPU usage.")
 parser.add_argument("-q", "--queue", action="store_true", help="Show statistics per queue.")
+parser.add_argument("-u", "--user", action="store", help="User to show statistics for.", default="$USER")
+parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.")
 args = parser.parse_args()
 
 class Stats(object):
@@ -78,7 +80,7 @@ class Stats(object):
 		return self.memory
 
 def user_stats(days):
-	out_owner = subprocess.Popen(["qacct -o $USER -q -d %s" % days], stdout=subprocess.PIPE, shell=True)
+	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (argv.user, days)], stdout=subprocess.PIPE, shell=True)
 	stats_owner = out_owner.communicate()
 #	print stats_owner[0].split("\n")[2:]			# Devel.
 	return Stats(stats_owner[0].split("\n")[2:])
