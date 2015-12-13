@@ -18,7 +18,7 @@ except ImportError:
 														        
 parser = argparse.ArgumentParser(prog="invoiceMe.py")
 parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbose", default=False)
-parser.add_argument("-d", "--days", action="store", help="Number of days to report statistics from [30].", default=30)
+parser.add_argument("-d", "--days", action="store", help="Number of days to report statistics for [30].", default=30)
 parser.add_argument("-s", "--seconds", action="store_true", help="Report statistics in seconds.", default=False)
 parser.add_argument("-c", "--cpu", action="store_true", help="Show total CPU usage.")
 parser.add_argument("-q", "--queue", action="store_true", help="Show statistics per queue.")
@@ -26,12 +26,15 @@ parser.add_argument("-u", "--user", action="store", help="User to show statistic
 parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.", default="Primary_group")
 parser.add_argument("-p", "--price", action="store_true", help="Calculate the price for the used resources.")
 parser.add_argument("--debug", action="store_true", help="Only used during development.")
+parser.add_argument("-i", "--instance", action="store", help="EC2 instance to base the price calculation on [t2_micro, t2_small, t2_medium, t2_large].", default="t2_micro")
+parser.add_argument("--dollar", action="store", help="Dollar rate used for calculating price [8.50$].", default=8.5)
 args = parser.parse_args()
 
-# Amazon Virtual server (EC2) prices
-
-
-
+# Amazon Virtual server (EC2) prices [Frankfurt] in dollar
+t2_micro = 0.015	
+t2_small = 0.030
+t2_medium = 0.060
+t2_large = 0.12	
 
 class Stats(object):
 	def __init__(self, raw_stats):
@@ -115,6 +118,21 @@ class Stats(object):
 	def get_memory(self):
 		return self.memory
 
+	def price_list(self, instance):
+		EC2 = {'t2_micro': 0.015, 't2_small': 0.030, 't2_medium': 0.060, 't2_large': 0.12}
+		return EC2[instance]
+
+	def get_price(self):
+		total_time = 0
+		price = 0.0
+		for queue in self.cpu_time:
+			total_time += float(queue[1])/60/60
+		
+		self.price_dollar = total_time * self.price_list(args.instance)
+		self.price_SKR = self.price_dollar * args.dollar
+		return "%s: %s SKR (%s USD)" % (self.get_user(), round(self.price_SKR, 0), round(self.price_dollar, 0))
+
+
 def user_stats(days):
 	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (args.user, days)], stdout=subprocess.PIPE, shell=True)
 	stats_owner = out_owner.communicate()
@@ -146,16 +164,21 @@ def main():
 	if args.cpu:
 		if args.verbose == True:
 			print "[Total CPU usage last %s days]" % args.days
-		print user.get_total_cpu()
-		print group.get_total_cpu()
+		print user.get_total_cpu(), "[User]"
+		print group.get_total_cpu(), "[Group]"
 	if args.queue:
 		if args.verbose == True:
 			print "[CPU usage per queue the last %s days]" % args.days
-			print "[User %s]" % args.user
+			print "[User %s]" % user.get_user()
 		print user.get_per_queue_cpu()
 		if args.verbose == True:
 			print "[Group %s]" % group.get_user()
 		print group.get_per_queue_cpu()
+	if args.price:
+		if args.verbose == True:
+			print "[Price for used CPU time for user %s based on price for EC2 instance %s]" % (user.get_user(), args.instance)
+		print user.get_price(), "[User]"
+		print group.get_price(), "[Group]"
 
 
 
