@@ -26,7 +26,7 @@ parser.add_argument("-u", "--user", action="store", help="User to show statistic
 parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.", default="Primary_group")
 parser.add_argument("-p", "--price", action="store_true", help="Calculate the price for the used resources.")
 parser.add_argument("--debug", action="store_true", help="Only used during development.")
-parser.add_argument("-i", "--instance", action="store", help="EC2 instance to base the price calculation on [t2_micro, t2_small, t2_medium, t2_large].", default="t2_micro")
+parser.add_argument("-i", "--instance", action="store", help="EC2 instance to base the price calculation on [t2_micro, t2_small, t2_medium, t2_large].")
 parser.add_argument("--dollar", action="store", help="Dollar rate used for calculating price [8.50$].", default=8.5)
 args = parser.parse_args()
 
@@ -74,9 +74,9 @@ class Stats(object):
 		# Return the total CPU usage 
 		self.total = 0
 		self.out = ""
-		if args.verbose:
-			self.out += str(self.get_user())
-			self.out += " " 
+#		if args.verbose:
+#			self.out += str(self.get_user())
+#			self.out += " " 
 		for queue in self.cpu_time:
 			self.total += float(queue[1])
 		if args.seconds == True:
@@ -109,18 +109,29 @@ class Stats(object):
 					out += str(round(float(queue[1]), 1)) + "\n"
 				else:
 					out += str(round(float(queue[1])/60/60, 1)) + "\n"
-#			if args.seconds == True:
-#				out += str(queue[0]) + " " + str(round(float(queue[1]), 1)) + " seconds" + "\n"
-#			else:
-#				out += str(queue[0]) + " " + str(round(float(queue[1])/60/60, 1)) + " hours" + "\n"
 		return out.rstrip()
 
 	def get_memory(self):
 		return self.memory
 
 	def get_price(self):
-		EC2 = {'t2_micro': 0.015, 't2_small': 0.030, 't2_medium': 0.060, 't2_large': 0.12}
-#		total_time = 0
+
+	
+		if args.instance == 't2_micro':
+			price = 0.015
+			EC2 = {'t2_micro': price, 't2_small': price, 't2_medium': price, 't2_large': price}
+		elif args.instance == 't2_small':
+			price = 0.030
+			EC2 = {'t2_micro': price, 't2_small': price, 't2_medium': price, 't2_large': price}
+		elif args.instance == 't2_medium':
+			price = 0.060/2
+			EC2 = {'t2_micro': price, 't2_small': price, 't2_medium': price, 't2_large': price}
+		elif args.instance == 't2_large':
+			price = 0.12/2
+			EC2 = {'t2_micro': price, 't2_small': price, 't2_medium': price, 't2_large': price}
+		else:
+			EC2 = {'t2_micro': 0.015, 't2_small': 0.030, 't2_medium': 0.060/2, 't2_large': 0.12/2}
+		
 		self.price_dollar = 0.0
 		for queue in self.cpu_time:
 			if queue[0] == "high_mem":
@@ -131,14 +142,12 @@ class Stats(object):
 				self.price_dollar += float(queue[1])/60/60 * EC2["t2_micro"]
 			else:
 				self.price_dollar += float(queue[1])/60/60 * EC2["t2_micro"]
-				
-				
-#			total_time += float(queue[1])/60/60
-		
-#		self.price_dollar = total_time * self.price_list(args.instance)
-		self.price_SKR = self.price_dollar * args.dollar
-		return "%s: %s SKR (%s USD)" % (self.get_user(), round(self.price_SKR, 0), round(self.price_dollar, 0))
 
+		self.price_SKR = self.price_dollar * args.dollar
+		if args.verbose:
+			return "%s SKR (%s USD)" % (round(self.price_SKR, 0), round(self.price_dollar, 0))
+		else:
+			return "%s SKR" % round(self.price_SKR, 0)
 
 def user_stats(days):
 	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (args.user, days)], stdout=subprocess.PIPE, shell=True)
@@ -170,12 +179,12 @@ def main():
 	# Print result to STDOUT
 	if args.cpu:
 		if args.verbose == True:
-			print "[Total CPU usage last %s days]" % args.days
+			print "[### Total CPU usage last %s days for user %s ###]" % (args.days, user.get_user())
 		print user.get_total_cpu(), "[User]"
 		print group.get_total_cpu(), "[Group]"
 	if args.queue:
 		if args.verbose == True:
-			print "[CPU usage per queue the last %s days]" % args.days
+			print "[### CPU usage per queue the last %s days ###]" % args.days
 			print "[User %s]" % user.get_user()
 		print user.get_per_queue_cpu()
 		if args.verbose == True:
@@ -183,7 +192,7 @@ def main():
 		print group.get_per_queue_cpu()
 	if args.price:
 		if args.verbose == True:
-			print "[Price for used CPU time for user %s]" % user.get_user()
+			print "[### Price for used CPU time for user %s ###]" % user.get_user()
 		print user.get_price(), "[User]"
 		print group.get_price(), "[Group]"
 
