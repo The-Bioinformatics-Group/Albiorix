@@ -17,13 +17,15 @@ except ImportError:
 		sys.exit("[Error] Exiting due to missing dependency 'argparser'")
 														        
 parser = argparse.ArgumentParser(prog="invoiceMe.py")
-parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbose")
-parser.add_argument("-d", "--days", action="store", help="Number of days to report statistics from.", default=30)
+parser.add_argument("-v", "--verbose", action="store_true", help="Be more verbose", default=False)
+parser.add_argument("-d", "--days", action="store", help="Number of days to report statistics from [30].", default=30)
 parser.add_argument("-s", "--seconds", action="store_true", help="Report statistics in seconds.", default=False)
 parser.add_argument("-c", "--cpu", action="store_true", help="Show total CPU usage.")
 parser.add_argument("-q", "--queue", action="store_true", help="Show statistics per queue.")
-parser.add_argument("-u", "--user", action="store", help="User to show statistics for.", default="$USER")
+parser.add_argument("-u", "--user", action="store", help="User to show statistics for [$USER].", default="$USER")
 parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.", default="Primary_group")
+parser.add_argument("-p", "--price", action="store_true", help="Calculate the price for the used resources.")
+parser.add_argument("--debug", action="store_true", help="Only used during development.")
 args = parser.parse_args()
 
 # Amazon Virtual server (EC2) prices
@@ -33,8 +35,14 @@ args = parser.parse_args()
 
 class Stats(object):
 	def __init__(self, raw_stats):
+
+#		print "raw_stats: ", raw_stats			# Devel.
 		self.stats = raw_stats
-		self.user = self.stats[0].split()[1]
+		try:
+#		print self.stats[0].split()[1]			# Devel.
+			self.user = self.stats[0].split()[1]
+		except IndexError:
+			sys.exit("No statistics available for user %s for the last %s days." % (args.user, args.days))
 		self.wallclock = []
 		self.user_time = []
 		self.system_time = []
@@ -81,12 +89,27 @@ class Stats(object):
 			
 	
 	def get_per_queue_cpu(self):
+		### Debug ###
+		if args.debug == True:
+			print self.cpu_time
 		out = ""
 		for queue in self.cpu_time:
-			if args.seconds == True:
-				out += str(queue[0]) + " " + str(round(float(queue[1]), 1)) + " seconds" + "\n"
+			if args.verbose:
+				out += str(queue[0])
+				out += " "
+				if args.seconds:
+					out += str(round(float(queue[1]), 1)) + " seconds" + "\n"
+				else:
+					out += str(round(float(queue[1])/60/60, 1)) + " hours" + "\n"
 			else:
-				out += str(queue[0]) + " " + str(round(float(queue[1])/60/60, 1)) + " hours" + "\n"
+				if args.seconds:
+					out += str(round(float(queue[1]), 1)) + "\n"
+				else:
+					out += str(round(float(queue[1])/60/60, 1)) + "\n"
+#			if args.seconds == True:
+#				out += str(queue[0]) + " " + str(round(float(queue[1]), 1)) + " seconds" + "\n"
+#			else:
+#				out += str(queue[0]) + " " + str(round(float(queue[1])/60/60, 1)) + " hours" + "\n"
 		return out.rstrip()
 
 	def get_memory(self):
@@ -100,11 +123,12 @@ def user_stats(days):
 
 def group_stats(days):
 	# Figure out the primary group if not set
-#	if args.group == "Primary_group":
-	my_group_out = subprocess.Popen(["groups $USER"], stdout=subprocess.PIPE, shell=True)
-	my_group = my_group_out.communicate()[0]
-	group = my_group.split(":")[1].split()[0]
-#	else:
+	if args.group == "Primary_group":
+		my_group_out = subprocess.Popen(["groups %s" % args.user], stdout=subprocess.PIPE, shell=True)
+		my_group = my_group_out.communicate()[0]
+		group = my_group.split(":")[1].split()[0]
+	else:
+		group = args.group
 	out_group = subprocess.Popen(["qacct -g %s -d %s -q" % (group, days)], stdout=subprocess.PIPE, shell=True)
 	stats_group = out_group.communicate()
 	return Stats(stats_group[0].split("\n")[2:])
@@ -119,17 +143,19 @@ def main():
 	group = group_stats(args.days)
 
 	# Print result to STDOUT
-#	if args.verbose:
-#		print(user.get_user()),
-
-	print args.group
-
 	if args.cpu:
+		if args.verbose == True:
+			print "[Total CPU usage last %s days]" % args.days
 		print user.get_total_cpu()
-#		print group.get_total_cpu()
+		print group.get_total_cpu()
 	if args.queue:
+		if args.verbose == True:
+			print "[CPU usage per queue the last %s days]" % args.days
+			print "[User %s]" % args.user
 		print user.get_per_queue_cpu()
-#		print group.get_per_queue_cpu()
+		if args.verbose == True:
+			print "[Group %s]" % group.get_user()
+		print group.get_per_queue_cpu()
 
 
 
