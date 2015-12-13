@@ -147,7 +147,7 @@ class Stats(object):
 		if args.verbose:
 			return "%s SKR (%s USD)" % (round(self.price_SKR, 0), round(self.price_dollar, 0))
 		else:
-			return "%s SKR" % round(self.price_SKR, 0)
+			return "%s" % round(self.price_SKR, 0)
 
 def user_stats(days):
 	out_owner = subprocess.Popen(["qacct -o %s -q -d %s" % (args.user, days)], stdout=subprocess.PIPE, shell=True)
@@ -179,22 +179,40 @@ def main():
 	# Print result to STDOUT
 	if args.cpu:
 		if args.verbose == True:
-			print "[### Total CPU usage last %s days for user %s ###]" % (args.days, user.get_user())
-		print user.get_total_cpu(), "[User]"
-		print group.get_total_cpu(), "[Group]"
+			print "[### Total CPU usage last %s days ###]" % args.days
+		if args.group == "Primary_group":
+			if args.verbose == True:
+				print user.get_total_cpu(), "[User: %s]" % user.get_user()
+			else:
+				print user.get_total_cpu()
+		else:
+			if args.verbose == True:
+				print group.get_total_cpu(), "[Group: %s]" % group.get_user()
+			else:
+				print group.get_total_cpu()
 	if args.queue:
 		if args.verbose == True:
 			print "[### CPU usage per queue the last %s days ###]" % args.days
-			print "[User %s]" % user.get_user()
-		print user.get_per_queue_cpu()
-		if args.verbose == True:
-			print "[Group %s]" % group.get_user()
-		print group.get_per_queue_cpu()
+		if args.group == "Primary_group":
+			print "[User: %s]" % user.get_user()
+			print user.get_per_queue_cpu()
+		else:
+			if args.verbose == True:
+				print "[Group: %s]" % group.get_user()
+			print group.get_per_queue_cpu()
 	if args.price:
 		if args.verbose == True:
-			print "[### Price for used CPU time for user %s ###]" % user.get_user()
-		print user.get_price(), "[User]"
-		print group.get_price(), "[Group]"
+			print "[### Price for used CPU time the last %s days ###]" % args.days
+		if args.group == "Primary_group":
+			if args.verbose == True:
+				print user.get_price(), "[User: %s]" % user.get_user()
+			else:
+				print user.get_price()
+		else:
+			if args.verbose == True:
+				print group.get_price(), "[Group: %s]" % group.get_user()
+			else:
+				print group.get_price()
 
 
 
