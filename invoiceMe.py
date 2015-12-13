@@ -118,17 +118,24 @@ class Stats(object):
 	def get_memory(self):
 		return self.memory
 
-	def price_list(self, instance):
-		EC2 = {'t2_micro': 0.015, 't2_small': 0.030, 't2_medium': 0.060, 't2_large': 0.12}
-		return EC2[instance]
-
 	def get_price(self):
-		total_time = 0
-		price = 0.0
+		EC2 = {'t2_micro': 0.015, 't2_small': 0.030, 't2_medium': 0.060, 't2_large': 0.12}
+#		total_time = 0
+		self.price_dollar = 0.0
 		for queue in self.cpu_time:
-			total_time += float(queue[1])/60/60
+			if queue[0] == "high_mem":
+				self.price_dollar += float(queue[1])/60/60 * EC2["t2_large"]
+			elif queue[0] == "node0":
+				self.price_dollar += float(queue[1])/60/60 * EC2["t2_small"]
+			elif queue[0] == "sandbox":
+				self.price_dollar += float(queue[1])/60/60 * EC2["t2_micro"]
+			else:
+				self.price_dollar += float(queue[1])/60/60 * EC2["t2_micro"]
+				
+				
+#			total_time += float(queue[1])/60/60
 		
-		self.price_dollar = total_time * self.price_list(args.instance)
+#		self.price_dollar = total_time * self.price_list(args.instance)
 		self.price_SKR = self.price_dollar * args.dollar
 		return "%s: %s SKR (%s USD)" % (self.get_user(), round(self.price_SKR, 0), round(self.price_dollar, 0))
 
@@ -176,7 +183,7 @@ def main():
 		print group.get_per_queue_cpu()
 	if args.price:
 		if args.verbose == True:
-			print "[Price for used CPU time for user %s based on price for EC2 instance %s]" % (user.get_user(), args.instance)
+			print "[Price for used CPU time for user %s]" % user.get_user()
 		print user.get_price(), "[User]"
 		print group.get_price(), "[Group]"
 
