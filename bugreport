@@ -58,7 +58,8 @@ printf "\n\n" >> $OUTDIR/$OUTFILE
 
 printf "### $STARTTIME ###\n" >> $OUTDIR/$OUTFILE
 printf "### qstat ###\n" >> $OUTDIR/$OUTFILE
-/opt/gridengine/bin/linux-x64/qstat -f -u "*" -q node0@compute-0-0.local sandbox@compute-0-1.local sandbox@compute-0-2.local sandbox@compute-0-3.local sandbox@compute-0-4.local sandbox@compute-0-5.local sandbox@compute-0-6.local >> $OUTDIR/$OUTFILE
+#/opt/gridengine/bin/linux-x64/qstat -f -u "*" -q node0@compute-0-0.local sandbox@compute-0-1.local sandbox@compute-0-2.local sandbox@compute-0-3.local sandbox@compute-0-4.local sandbox@compute-0-5.local sandbox@compute-0-6.local >> $OUTDIR/$OUTFILE
+/opt/gridengine/bin/linux-x64/qstat -f -u "*" >> $OUTDIR/$OUTFILE
 printf "\n" >> $OUTDIR/$OUTFILE
 
 printf "### STDOUT & STDERR ###\n" >> $OUTDIR/$OUTFILE
