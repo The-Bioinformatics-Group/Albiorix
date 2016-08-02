@@ -4,4 +4,4 @@ echo -n "Requested time [in hours]: "
 read req_time
 
 # Only accept single digits. First digit will be used.
-qlogin -l h_rt=${req_time:0:1}:0:0 $*
+/opt/gridengine/bin/linux-x64/qlogin -l h_rt=${req_time:0:1}:0:0 $*
