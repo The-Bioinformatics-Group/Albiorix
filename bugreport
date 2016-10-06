@@ -44,6 +44,10 @@ printf `hostname`"\n\n" >> $OUTDIR/$OUTFILE
 printf "### PWD ###\n" >> $OUTDIR/$OUTFILE
 printf `pwd`"\n\n">> $OUTDIR/$OUTFILE
 
+printf "### Loaded Modules ###\n" >> $OUTDIR/$OUTFILE
+source /etc/profile.d/modules.sh
+module list 2>> $OUTDIR/$OUTFILE
+
 printf "### Command ###\n" >> $OUTDIR/$OUTFILE
 STARTTIME=`date +'%x %H:%M:%S'`
 printf "$*\n\n" >> $OUTDIR/$OUTFILE
@@ -53,7 +57,7 @@ echo "[${USER}"@"${HOSTNAME%%.*}" "${PWD/#$HOME/~}]$" $* >> $OUTDIR/$OUTFILE
 echo "" >> $OUTDIR/$OUTFILE
 
 printf "### Which $1 ###\n" >> $OUTDIR/$OUTFILE
-printf `which $1` >> $OUTDIR/$OUTFILE 
+printf `which $1` >> $OUTDIR/$OUTFILE
 printf "\n\n" >> $OUTDIR/$OUTFILE
 
 printf "### $STARTTIME ###\n" >> $OUTDIR/$OUTFILE
@@ -71,11 +75,11 @@ printf "### ENV localhost ###\n" >> $OUTDIR/$OUTFILE
 /bin/env >> $OUTDIR/$OUTFILE
 printf "\n" >> $OUTDIR/$OUTFILE
 
-printf "### Node env ###\n" >> $OUTDIR/$OUTFILE
-rocks run host "echo; echo '#################'; hostname; echo '#################'; env; echo '########'; cat /proc/meminfo" >> $OUTDIR/$OUTFILE
+#printf "### Node env ###\n" >> $OUTDIR/$OUTFILE
+#rocks run host "echo; echo '#################'; hostname; echo '#################'; env; echo '########'; cat /proc/meminfo" >> $OUTDIR/$OUTFILE
 
-printf "\n### Node ps axjf ###\n" >> $OUTDIR/$OUTFILE
-rocks run host "echo; echo '#################'; hostname; echo '#################'; ps axjf" >> $OUTDIR/$OUTFILE
+#printf "\n### Node ps axjf ###\n" >> $OUTDIR/$OUTFILE
+#rocks run host "echo; echo '#################'; hostname; echo '#################'; ps axjf" >> $OUTDIR/$OUTFILE
 
 ###########################################
 ### Finish ###
