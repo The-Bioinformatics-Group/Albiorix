@@ -214,6 +214,12 @@ def main():
 				print group.get_price(), "[Group: %s]" % group.get_user()
 			else:
 				print group.get_price()
+	
+	if args.project:
+		if args.verbose == True:
+			print "[### Resources used for project %s the last %s days ###]" % (args.project, args.days)
+		if args.verbose == True:
+			pass
 
 
 
