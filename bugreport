@@ -84,7 +84,9 @@ printf "\n" >> $OUTDIR/$OUTFILE
 ### Finish ###
 
 printf "\n\n	### A bug report has been filed ###\n\n"
-printf "	Please post this report on the 'bugreport' channel on the Albiorix Slack group\n"
+printf "	Please post a request for assistance on the 'bugreport' channel on the Albiorix Slack group\n"
+printf "	Also include:\n"
 printf "	1). A description of the bug\n"
 printf "	2). Expected output from the program\n"
-printf "	3). The bug report number: $my_RANDOM\n\n"
+printf "	3). Full path to the bugreport: $OUTDIR/$OUTFILE\n\n"
+printf "	You can sign up for an account on the Slack group at https://albiorix.slack.com/\n"
