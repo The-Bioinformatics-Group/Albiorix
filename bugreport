@@ -5,7 +5,6 @@ OUTFILE=`whoami`.`date +%C%y-%m-%d`.$my_RANDOM.txt
 OUTDIR=/usr/local/bugreports
 #OUTDIR="."
 USER=`whoami`
-MAIL=mats@topel.se
 touch $OUTDIR/$OUTFILE
 
 #if [ "$#" === "0" ]; then
@@ -85,7 +84,7 @@ printf "\n" >> $OUTDIR/$OUTFILE
 ### Finish ###
 
 printf "\n\n	### A bug report has been filed ###\n\n"
-printf "	Please send and email to your system administrator ("$MAIL") including:\n"
+printf "	Please post this report on the 'bugreport' channel on the Albiorix Slack group\n"
 printf "	1). A description of the bug\n"
 printf "	2). Expected output from the program\n"
 printf "	3). The bug report number: $my_RANDOM\n\n"
