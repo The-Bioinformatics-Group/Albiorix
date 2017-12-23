@@ -25,7 +25,7 @@ parser.add_argument("-q", "--queue", action="store_true", help="Show statistics 
 parser.add_argument("-u", "--user", action="store", help="User to show statistics for [$USER].", default="$USER")
 parser.add_argument("-g", "--group", action="store", help="Group to show statistics for.", default="Primary_group")
 parser.add_argument("-p", "--price", action="store_true", help="Calculate the price for the used resources.")
-parser.add_argument("-P", "--project", action="store_true", help="Name of the project that used the resourses.")
+parser.add_argument("-P", "--project", help="Name of the project that used the resourses.")
 parser.add_argument("--debug", action="store_true", help="Only used during development.")
 parser.add_argument("-i", "--instance", action="store", help="EC2 instance to base the price calculation on [t2_micro, t2_small, t2_medium, t2_large].")
 parser.add_argument("--dollar", action="store", help="Dollar rate used for calculating price [8.50$].", default=8.5)
@@ -218,8 +218,10 @@ def main():
 	if args.project:
 		if args.verbose == True:
 			print "[### Resources used for project %s the last %s days ###]" % (args.project, args.days)
-		if args.verbose == True:
-			pass
+		out_project = subprocess.Popen(["qacct -P %s" % (args.project)], stdout=subprocess.PIPE, shell=True)
+		stats_project = out_project.communicate()
+		stats = Stats(stats_project[0].split("\n")[2:])
+		print stats.get_price()
 
 
 
