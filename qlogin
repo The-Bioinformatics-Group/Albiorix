@@ -3,5 +3,12 @@
 echo -n "Requested time [in hours]: "
 read req_time
 
+if [ $req_time -gt 12 ]
+then
+req_time=12
+fi
+
+
 # Only accept single digits. First digit will be used.
-/opt/gridengine/bin/linux-x64/qlogin -l h_rt=${req_time:0:1}:0:0 $*
+#echo "/opt/gridengine/bin/linux-x64/qlogin -l h_rt=${req_time:0:2}:0:0 $*"
+/opt/gridengine/bin/linux-x64/albiorix/qlogin -l h_rt=${req_time:0:2}:0:0 $*
