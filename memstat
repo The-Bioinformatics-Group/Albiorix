@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#    Copyright (C) 2017 Mats Topel, mats.topel@marine.gu.se
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version. Please see <http://www.gnu.org/licenses/>
+#    for more information.
+#
+# 	 Usage: memstat <COMMAND [options] ...>
+#
+#    memstat will extract the value of the RSS column corresponding to the
+#    PID of the <COMMAND> every second and store it in a file named 
+#    memstat.<PID>.txt (where <PID> is excanged for the proces id).
+
+# Run the desired command in the background
+$* &
+
+# Kill the background command if 'memstat' is killed
+trap "kill ${!} 2>/dev/null; exit 3" SIGHUP SIGINT SIGQUIT SIGTERM
+
+# Fetch the RSS output from 'ps'
+while [ -e /proc/$! ];
+do
+	ps --pid $!  -o "rss" h >> memstat.${!}.txt
+	sleep 60
+done
