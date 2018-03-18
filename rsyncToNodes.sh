@@ -79,3 +79,11 @@ rsync -hav taxonomy root@compute-0-5:/db/
 rsync -hav taxonomy root@compute-0-7:/db/
 rsync -hav taxonomy root@compute-0-8:/db/
 rsync -hav taxonomy root@compute-0-9:/db/
+
+# diamond
+rsync -hav diamond root@compute-0-1:/db/
+rsync -hav diamond root@compute-0-3:/db/
+rsync -hav diamond root@compute-0-5:/db/
+rsync -hav diamond root@compute-0-7:/db/
+rsync -hav diamond root@compute-0-8:/db/
+rsync -hav diamond root@compute-0-9:/db/
