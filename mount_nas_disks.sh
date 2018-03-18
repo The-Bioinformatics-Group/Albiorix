@@ -24,7 +24,7 @@ mkdir /proj/data20
 mkdir /proj/data21
 mkdir /proj/data22
 mkdir /proj/data23
-mkdir /proj/data24
+mkdir /nobackup/data24
 mkdir /proj/data25
 
 # Mount the NAS disks on the login server
@@ -49,10 +49,10 @@ mount nas-0-0:/export/data18 /nobackup/data18
 mount nas-0-0:/export/data19 /proj/data19
 mount nas-0-0:/export/data20 /proj/data20
 mount nas-0-0:/export/data21 /proj/data21
-mount nas-0-0:/export/data22 /nobackup/data22
+mount nas-0-0:/export/data22 /proj/data22
 mount nas-0-0:/export/data23 /proj/data23
 mount nas-0-0:/export/data24 /nobackup/data24
-mount nas-0-0:/export/data25 /nobackup/data25
+mount nas-0-0:/export/data25 /proj/data25
 
 # Create mountpoints on the compute nodes
 rocks run host "mkdir -p /nobackup/data1"
@@ -76,10 +76,10 @@ rocks run host "mkdir /nobackup/data18"
 rocks run host "mkdir /proj/data19"
 rocks run host "mkdir /proj/data20"
 rocks run host "mkdir /proj/data21"
-rocks run host "mkdir /nobackup/data22"
+rocks run host "mkdir /proj/data22"
 rocks run host "mkdir /proj/data23"
 rocks run host "mkdir /nobackup/data24"
-rocks run host "mkdir /nobackup/data25"
+rocks run host "mkdir /proj/data25"
 
 # Mount the NAS disks on the compute nodes
 rocks run host "mount nas-0-0:/export/data1 /nobackup/data1"
@@ -103,10 +103,10 @@ rocks run host "mount nas-0-0:/export/data18 /nobackup/data18"
 rocks run host "mount nas-0-0:/export/data19 /proj/data19"
 rocks run host "mount nas-0-0:/export/data20 /proj/data20"
 rocks run host "mount nas-0-0:/export/data21 /proj/data21"
-rocks run host "mount nas-0-0:/export/data22 /nobackup/data22"
+rocks run host "mount nas-0-0:/export/data22 /proj/data22"
 rocks run host "mount nas-0-0:/export/data23 /proj/data23"
 rocks run host "mount nas-0-0:/export/data24 /nobackup/data24"
-rocks run host "mount nas-0-0:/export/data25 /nobackup/data25"
+rocks run host "mount nas-0-0:/export/data25 /proj/data25"
 
 # Mount /usr/local
 rocks run host "mv /usr/local /usr/rocks.local"
