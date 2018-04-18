@@ -112,6 +112,10 @@ rocks run host "mount nas-0-0:/export/data25 /proj/data25"
 rocks run host "mv /usr/local /usr/rocks.local"
 rocks run host "ln -s /home/local /usr/local"
 
+# Mount /usr/share/Modules
+rocks run host "mv /usr/share/Modules /usr/share/rocks.Modules"
+rocks run host "ln -s /home/local/Modules /usr/share/Modules"
+
 ####
 # Desperate hacks
 ###
