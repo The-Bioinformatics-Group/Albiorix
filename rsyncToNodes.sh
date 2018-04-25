@@ -15,6 +15,10 @@ rsync -hav nt.* root@compute-0-5:/db/
 rsync -hav nt.* root@compute-0-7:/db/
 rsync -hav nt.* root@compute-0-8:/db/
 rsync -hav nt.* root@compute-0-9:/db/
+rsync -hav nt.* root@compute-0-10:/db/
+#rsync -hav nt.* root@compute-0-11:/db/
+rsync -hav nt.* root@compute-0-12:/db/
+rsync -hav nt.* root@compute-0-13:/db/
 
 # nr
 rsync -hav nr.* root@compute-0-1:/db/
@@ -23,6 +27,10 @@ rsync -hav nr.* root@compute-0-5:/db/
 rsync -hav nr.* root@compute-0-7:/db/
 rsync -hav nr.* root@compute-0-8:/db/
 rsync -hav nr.* root@compute-0-9:/db/
+rsync -hav nr.* root@compute-0-10:/db/
+#rsync -hav nr.* root@compute-0-11:/db/
+rsync -hav nr.* root@compute-0-12:/db/
+rsync -hav nr.* root@compute-0-13:/db/
 
 # Prokka
 rsync -hav prokka root@compute-0-1:/db/
