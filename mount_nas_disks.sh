@@ -116,6 +116,17 @@ rocks run host "ln -s /home/local /usr/local"
 rocks run host "mv /usr/share/Modules /usr/share/rocks.Modules"
 rocks run host "ln -s /home/local/Modules /usr/share/Modules"
 
+# Mount /state/partition2/db
+rocks run host "mkdir /state/partition2/db"
+rocks run host "ln -s /state/partition2/db /db"
+
+# Mount /state/partition2/TMP
+rocks run host "mkdir /state/partition2/TMP"
+rocks run host "chmod 777 /state/partition2/TMP"
+rocks run host "rsync -a /tmp/ /state/partition2/TMP"
+rocks run host "mv /tmp /rocks.tmp"
+rocks run host "ln -s /state/partition2/TMP /tmp"
+
 ####
 # Desperate hacks
 ###
