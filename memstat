@@ -23,6 +23,6 @@ trap "kill ${!} 2>/dev/null; exit 3" SIGHUP SIGINT SIGQUIT SIGTERM
 # Fetch the RSS output from 'ps'
 while [ -e /proc/$! ];
 do
-	ps --pid $!  -o "rss" h >> memstat.${!}.txt
+	ps --pid $!  -o "rss,%cpu" h >> memstat.${!}.txt
 	sleep 60
 done
