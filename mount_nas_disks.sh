@@ -26,6 +26,7 @@ mkdir /proj/data22
 mkdir /proj/data23
 mkdir /nobackup/data24
 mkdir /proj/data25
+mkdir /proj/data26
 
 # Mount the NAS disks on the login server
 mount nas-0-0:/export/data1 /nobackup/data1
@@ -53,6 +54,7 @@ mount nas-0-0:/export/data22 /proj/data22
 mount nas-0-0:/export/data23 /proj/data23
 mount nas-0-0:/export/data24 /nobackup/data24
 mount nas-0-0:/export/data25 /proj/data25
+mount nas-0-0:/export/data26 /proj/data26
 
 # Create mountpoints on the compute nodes
 rocks run host "mkdir -p /nobackup/data1"
@@ -80,6 +82,7 @@ rocks run host "mkdir /proj/data22"
 rocks run host "mkdir /proj/data23"
 rocks run host "mkdir /nobackup/data24"
 rocks run host "mkdir /proj/data25"
+rocks run host "mkdir /proj/data26"
 
 # Mount the NAS disks on the compute nodes
 rocks run host "mount nas-0-0:/export/data1 /nobackup/data1"
@@ -107,6 +110,7 @@ rocks run host "mount nas-0-0:/export/data22 /proj/data22"
 rocks run host "mount nas-0-0:/export/data23 /proj/data23"
 rocks run host "mount nas-0-0:/export/data24 /nobackup/data24"
 rocks run host "mount nas-0-0:/export/data25 /proj/data25"
+rocks run host "mount nas-0-0:/export/data26 /proj/data26"
 
 # Mount /usr/local
 rocks run host "mv /usr/local /usr/rocks.local"
@@ -121,12 +125,19 @@ rocks run host "mkdir /state/partition2/db"
 rocks run host "ln -s /state/partition2/db /db"
 
 # Mount /state/partition2/TMP
+rocks run host nas-0-0 "mv /tmp /_tmp"
+rocks run host compute-0-10 "mv /tmp /_tmp"
+rocks run host compute-0-12 "mv /tmp /_tmp"
+rocks run host compute-0-13 "mv /tmp /_tmp"
 rocks run host "mkdir /state/partition2/TMP"
 rocks run host "chmod 777 /state/partition2/TMP"
 rocks run host "rsync -a /tmp/ /state/partition2/TMP"
 rocks run host "mv /tmp /rocks.tmp"
 rocks run host "ln -s /state/partition2/TMP /tmp"
-
+rocks run host nas-0-0 "mv /_tmp tmp"
+rocks run host compute-0-10 "mv /_tmp /tmp"
+rocks run host compute-0-12 "mv /_tmp /tmp"
+rocks run host compute-0-13 "mv /_tmp /tmp"
 ####
 # Desperate hacks
 ###
