@@ -39,6 +39,10 @@ rsync -hav prokka root@compute-0-5:/db/
 rsync -hav prokka root@compute-0-7:/db/
 rsync -hav prokka root@compute-0-8:/db/
 rsync -hav prokka root@compute-0-9:/db/
+rsync -hav prokka root@compute-0-10:/db/
+#rsync -hav prokka root@compute-0-11:/db/
+rsync -hav prokka root@compute-0-12:/db/
+rsync -hav prokka root@compute-0-13:/db/
 
 # trinotate
 rsync -hav trinotatedbs root@compute-0-1:/db/
@@ -73,6 +77,22 @@ rsync -hav bowtie2 root@compute-0-1:/db/
 rsync -hav bowtie2 root@compute-0-3:/db/
 rsync -hav bowtie2 root@compute-0-5:/db/
 rsync -hav bowtie2 root@compute-0-7:/db/
+rsync -hav bowtie2 root@compute-0-10:/db/
+#rsync -hav bowtie2 root@compute-0-11:/db/
+rsync -hav bowtie2 root@compute-0-12:/db/
+rsync -hav bowtie2 root@compute-0-13:/db/
+
+# Whatisit
+rsync -hav whatisit root@compute-0-1:/db/
+rsync -hav whatisit root@compute-0-3:/db/
+rsync -hav whatisit root@compute-0-5:/db/
+rsync -hav whatisit root@compute-0-7:/db/
+rsync -hav whatisit root@compute-0-8:/db/
+rsync -hav whatisit root@compute-0-9:/db/
+rsync -hav whatisit root@compute-0-10:/db/
+#rsync -hav whatisit root@compute-0-11:/db/
+rsync -hav whatisit root@compute-0-12:/db/
+rsync -hav whatisit root@compute-0-13:/db/
 
 # Kraken
 rsync -hav kraken root@compute-0-1:/db/
@@ -85,7 +105,7 @@ rsync -hav taxonomy root@compute-0-1:/db/
 rsync -hav taxonomy root@compute-0-3:/db/
 rsync -hav taxonomy root@compute-0-5:/db/
 rsync -hav taxonomy root@compute-0-7:/db/
-rsync -hav taxonomy root@compute-0-8:/db/
+#rsync -hav taxonomy root@compute-0-8:/db/
 rsync -hav taxonomy root@compute-0-9:/db/
 
 # diamond
