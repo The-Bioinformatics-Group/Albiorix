@@ -37,7 +37,7 @@ rsync -hav prokka root@compute-0-1:/db/
 rsync -hav prokka root@compute-0-3:/db/
 rsync -hav prokka root@compute-0-5:/db/
 rsync -hav prokka root@compute-0-7:/db/
-rsync -hav prokka root@compute-0-8:/db/
+#rsync -hav prokka root@compute-0-8:/db/
 rsync -hav prokka root@compute-0-9:/db/
 rsync -hav prokka root@compute-0-10:/db/
 #rsync -hav prokka root@compute-0-11:/db/
